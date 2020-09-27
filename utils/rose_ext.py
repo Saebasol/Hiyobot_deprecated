@@ -21,7 +21,7 @@ def make_embed_with_info(info: dict):
         url=info.title["url"],
     )
     embed.set_thumbnail(url=f"https://doujinshiman.ga/proxy/{info.thumbnail}")
-    embed.add_field(name="번호", value=info.galleryid)
+    embed.add_field(name="번호", value=f"https://hitomi.la/reader/{info.galleryid}.html")
     embed.add_field(name="타입", value=f"[{info.type['value']}]({info.type['url']})")
     embed.add_field(name="작가", value=",".join(parse_value_url(info.artist)))
     embed.add_field(name="그룹", value=",".join(parse_value_url(info.group)))
@@ -34,12 +34,53 @@ def make_embed_with_info(info: dict):
     return embed
 
 
+def make_viewer_embed(index: int, file_name: str, total, num):
+    return (
+        discord.Embed()
+        .set_image(url=f"https://doujinshiman.ga/image/{index}/{file_name}")
+        .set_footer(text=f"{total}쪽중 {num}쪽")
+    )
+
+
 class RoseExt(_Client):
     def __init__(self, authorization):
         super().__init__(authorization)
         self.cache = aiocache.Cache()
 
     async def cache_list_embed(self, number):
-        lists = await self.list_(number).list
-        embed = [make_embed_with_info(list_) for list_ in lists]
+        lists = await self.list_(number)
+        if lists.code != 200:
+            return discord.Embed(title="정보를 찾을수 없습니다")
+        embed = [make_embed_with_info(list_) for list_ in lists.list]
         await self.cache.set("list_embed", embed)
+
+    async def info_embed(self, index):
+        info = await self.info(index)
+        if info.code != 200:
+            return discord.Embed(title="정보를 찾을수 없습니다")
+        return make_embed_with_info(info)
+
+    async def cache_viewer_embed(self, index):
+        galleryinfo = await self.galleryinfo(index)
+        embed = []
+        num = 0
+        if galleryinfo.code != 200:
+            return discord.Embed(title="정보를 찾을수 없습니다")
+        await self.download(index)
+        for file_info in galleryinfo.files:
+            num += 1
+            embed.append(
+                make_viewer_embed(index, file_info.name, len(galleryinfo.files), num)
+            )
+        await self.cache.set("viewer_embed", embed)
+
+    async def download_embed(self, user_id, index):
+        galleryinfo = await self.galleryinfo(index)
+        if galleryinfo.code != 200:
+            return discord.Embed(title="정보를 찾을수 없습니다")
+        elif len(galleryinfo.files) > 100:
+            return discord.Embed(title="100장이상은 다운로드 하실수 없습니다.")
+        else:
+            response = await self.download(index, user_id, True)
+            print(response)
+            return discord.Embed(title="다운로드 완료", url=response.link)
