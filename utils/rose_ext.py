@@ -14,6 +14,7 @@ def parse_value_url(value_url_list: list):
 
 
 def make_embed_with_info(info: dict):
+    tags_join = ",".join(parse_value_url(info.tags))
     embed = discord.Embed(
         title=info.title["value"],
         description=f"[{info.language['value']}]({info.language['url']})",
@@ -26,7 +27,10 @@ def make_embed_with_info(info: dict):
     embed.add_field(name="그룹", value=",".join(parse_value_url(info.group)))
     embed.add_field(name="원작", value=",".join(parse_value_url(info.series)))
     embed.add_field(name="캐릭터", value=",".join(parse_value_url(info.characters)))
-    embed.add_field(name="태그", value=",".join(parse_value_url(info.tags)))
+    embed.add_field(
+        name="태그",
+        value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무길어요",
+    )
     return embed
 
 
