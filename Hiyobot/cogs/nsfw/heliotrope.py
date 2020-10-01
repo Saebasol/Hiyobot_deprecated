@@ -38,6 +38,12 @@ class Heliotrope(commands.Cog):
         embed = await self.rose.download_embed(ctx.author.id, index)
         await msg.edit(embed=embed)
 
+    @commands.command(name="현황")
+    async def _progress(self, ctx):
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
+        embed = await self.rose.progress_embed(ctx.author.id)
+        await msg.edit(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Heliotrope(bot))
