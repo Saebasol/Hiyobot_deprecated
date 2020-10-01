@@ -11,6 +11,7 @@ class Heliotrope(commands.Cog):
         self.rose = RoseExt(os.environ["heliotrope_auth"])
 
     @commands.command(name="리스트")
+    @commands.is_nsfw()
     async def _list(self, ctx, num: int = 1):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
         not_found = await self.rose.cache_list_embed(num)
@@ -19,12 +20,14 @@ class Heliotrope(commands.Cog):
         await pagenator(self.bot, ctx, msg, self.rose.cache, "list_embed")
 
     @commands.command(name="정보")
+    @commands.is_nsfw()
     async def _info(self, ctx, index: int):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
         embed = await self.rose.info_embed(index)
         await msg.edit(embed=embed)
 
     @commands.command(name="뷰어")
+    @commands.is_nsfw()
     async def _viewer(self, ctx, index: int):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
         not_found = await self.rose.cache_viewer_embed(index)
