@@ -1,2 +1,4 @@
 aiohttp==3.6.2
 discord.py==1.4.1
+git+https://github.com/Nekos-life/Async-nekos.life-wrapper.git
+git+https://github.com/SaidBySolo/Rose.git
