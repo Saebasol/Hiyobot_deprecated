@@ -10,6 +10,7 @@ class Hiyobi(commands.Cog):
         self.hiyobi = HiyobiExt()
 
     @commands.command(name="히요비리스트")
+    @commands.is_nsfw()
     async def _hiyobi_list(self, ctx, num: int = 1):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
         not_found = await self.hiyobi.cache_list_embed(num)
@@ -18,12 +19,14 @@ class Hiyobi(commands.Cog):
         await pagenator(self.bot, ctx, msg, self.hiyobi.cache, "hiyobi_list_embed")
 
     @commands.command(name="히요비정보")
+    @commands.is_nsfw()
     async def _hiyobi_info(self, ctx, index: int):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
         embed = await self.hiyobi.info_embed(index)
         await msg.edit(embed=embed)
 
     @commands.command(name="히요비검색")
+    @commands.is_nsfw()
     async def _hiyobi_search(self, ctx, *keyword):
         search = list(keyword)
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
