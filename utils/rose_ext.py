@@ -81,14 +81,14 @@ class RoseExt(_Client):
 
     async def cache_list_embed(self, number):
         lists = await self.list_(number)
-        if lists.code != 200:
+        if lists.status != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
         embed = [make_embed_with_info(list_) for list_ in lists.list]
         await self.cache.set("list_embed", embed)
 
     async def info_embed(self, index):
         info = await self.info(index)
-        if info.code != 200:
+        if info.status != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
         return make_embed_with_info(info)
 
@@ -96,7 +96,7 @@ class RoseExt(_Client):
         galleryinfo = await self.galleryinfo(index)
         embed = []
         num = 0
-        if galleryinfo.code != 200:
+        if galleryinfo.status != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
         await self.download(index)
         for file_info in galleryinfo.files:
@@ -108,18 +108,27 @@ class RoseExt(_Client):
 
     async def download_embed(self, user_id, index):
         galleryinfo = await self.galleryinfo(index)
-        if galleryinfo.code != 200:
+        if galleryinfo.status != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
         else:
             response = await self.download(index, user_id, True)
-            if response.code == 200:
+            if response.status == 200:
                 return discord.Embed(
                     title="성공적으로 요청했어요", description="``&현황``을 사용해서 다운로드 현황을 확인할수 있어요."
                 )
 
     async def progress_embed(self, user_id):
         progress = await self.progress(user_id)
-        if progress.code != 200:
+        if progress.status != 200:
             return discord.Embed(title="기록을 찾을수 없습니다")
         else:
             return make_embed_with_progress_info(progress.info)
+
+    async def register(self, user_id):
+        response = await self.register(user_id)
+        if response.status == 200:
+            return discord.Embed(title="이미 가입되어있습니다.")
+        elif response.status == 201:
+            return discord.Embed(title="가입 되었습니다.")
+        else:
+            return discord.Embed(title="잘못 되었습니다.")
