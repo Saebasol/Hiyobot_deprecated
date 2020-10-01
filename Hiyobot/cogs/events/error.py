@@ -29,3 +29,7 @@ class Error(commands.Cog):
                 "명령어 사용법이 잘못되었습니다. 지정한 값이 잘못되었습니다. `&도움말` 명령어를 통해 정확한 사용법을 보실 수 있습니다.",
                 delete_after=5,
             )
+
+
+def setup(bot):
+    bot.add_cog(Error(bot))
