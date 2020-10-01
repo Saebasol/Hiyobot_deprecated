@@ -24,15 +24,27 @@ def make_embed_with_info(info: dict):
     embed.add_field(
         name="번호",
         value=f"[{info.galleryid}](https://hitomi.la/reader/{info.galleryid}.html)",
+        inline=False,
     )
-    embed.add_field(name="타입", value=f"[{info.type['value']}]({info.type['url']})")
-    embed.add_field(name="작가", value=",".join(parse_value_url(info.artist)))
-    embed.add_field(name="그룹", value=",".join(parse_value_url(info.group)))
-    embed.add_field(name="원작", value=",".join(parse_value_url(info.series)))
-    embed.add_field(name="캐릭터", value=",".join(parse_value_url(info.characters)))
+    embed.add_field(
+        name="타입", value=f"[{info.type['value']}]({info.type['url']})", inline=False
+    )
+    embed.add_field(
+        name="작가", value=",".join(parse_value_url(info.artist)), inline=False
+    )
+    embed.add_field(
+        name="그룹", value=",".join(parse_value_url(info.group)), inline=False
+    )
+    embed.add_field(
+        name="원작", value=",".join(parse_value_url(info.series)), inline=False
+    )
+    embed.add_field(
+        name="캐릭터", value=",".join(parse_value_url(info.characters)), inline=False
+    )
     embed.add_field(
         name="태그",
         value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무길어요",
+        inline=False,
     )
     return embed
 
