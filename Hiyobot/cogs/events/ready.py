@@ -29,3 +29,7 @@ class Ready(commands.Cog):
         # Status
         game = discord.Game(f"&도움말 | {Hiyobot.__version__}")
         await self.bot.change_presence(status=discord.Status.online, activity=game)
+
+
+def setup(bot):
+    bot.add_cog(Ready(bot))
