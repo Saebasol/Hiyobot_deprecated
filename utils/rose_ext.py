@@ -21,7 +21,10 @@ def make_embed_with_info(info: dict):
         url=info.title["url"],
     )
     embed.set_thumbnail(url=f"https://doujinshiman.ga/proxy/{info.thumbnail}")
-    embed.add_field(name="번호", value=f"https://hitomi.la/reader/{info.galleryid}.html")
+    embed.add_field(
+        name="번호",
+        value=f"[{info.galleryid}](https://hitomi.la/reader/{info.galleryid}.html)",
+    )
     embed.add_field(name="타입", value=f"[{info.type['value']}]({info.type['url']})")
     embed.add_field(name="작가", value=",".join(parse_value_url(info.artist)))
     embed.add_field(name="그룹", value=",".join(parse_value_url(info.group)))
@@ -31,6 +34,23 @@ def make_embed_with_info(info: dict):
         name="태그",
         value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무길어요",
     )
+    return embed
+
+
+def make_embed_with_progress_info(progress: list):
+    embed = discord.Embed(title="다운로드 정보입니다.")
+
+    for info in progress:
+        if not info.link:
+            link = ""
+        else:
+            link = f"다운로드: [링크]({info.link})"
+
+        embed.add_field(
+            name=info.index,
+            value=f"남은 횟수: {info.count}\n\n진행 상황: {info.task_status}\n\n{link}",
+        )
+
     return embed
 
 
@@ -78,9 +98,16 @@ class RoseExt(_Client):
         galleryinfo = await self.galleryinfo(index)
         if galleryinfo.code != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
-        elif len(galleryinfo.files) > 100:
-            return discord.Embed(title="100장이상은 다운로드 하실수 없습니다.")
         else:
             response = await self.download(index, user_id, True)
-            print(response)
-            return discord.Embed(title="다운로드 완료", url=response.link)
+            if response.code == 200:
+                return discord.Embed(
+                    title="성공적으로 요청했어요", description="``&현황``을 사용해서 다운로드 현황을 확인할수 있어요."
+                )
+
+    async def progress_embed(self, user_id):
+        progress = await self.progress(user_id)
+        if progress.code != 200:
+            return discord.Embed(title="기록을 찾을수 없습니다")
+        else:
+            return make_embed_with_progress_info(progress.info)
