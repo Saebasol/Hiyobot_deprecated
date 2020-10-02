@@ -27,13 +27,9 @@ class Info(commands.Cog):
         await ctx.trigger_typing()
         message_latency2 = time.perf_counter()
 
-        hiyobi_latency1 = time.perf_counter()
-        await self.hiyobi.latency()
-        hiyobi_latency2 = time.perf_counter()
+        hiyobi_latency = await self.hiyobi.latency()
 
-        private_latency1 = time.perf_counter()
-        await self.rose.latency()
-        private_latency2 = time.perf_counter()
+        heliotrope_latency = await self.rose.latency()
 
         embed = discord.Embed(
             title=f"Info\nCommand prefix: `&`\nHiyobot: `{Hiyobot.__version__}`",
@@ -75,11 +71,11 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
-            value=f"{round((hiyobi_latency2 - hiyobi_latency1) * 1000, 2)}ms",
+            value=f"{round(hiyobi_latency * 1000, 2)}ms",
         )
         embed.add_field(
             name="Average Heliotrope server latency",
-            value=f"{round((private_latency2 - private_latency1) * 1000, 2)}ms",
+            value=f"{round(heliotrope_latency * 1000, 2)}ms",
         )
         await ctx.send(embed=embed)
 
