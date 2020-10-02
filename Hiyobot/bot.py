@@ -12,6 +12,7 @@ logger.addHandler(handler)
 
 def load_cogs(bot):
     extensions = [
+        "jishaku",
         "events.error",
         "events.ready",
         "general.help",
@@ -26,8 +27,9 @@ def load_cogs(bot):
 
     for extension in extensions:
         try:
-            bot.load_extension("jishaku")
-            bot.load_extension("Hiyobot.cogs." + extension)
+            bot.load_extension(
+                "Hiyobot.cogs." + extension if "." in extension else extension
+            )
         except Exception as e:
             print(e)
             failed_list.append(extension)
