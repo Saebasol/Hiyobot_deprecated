@@ -1,3 +1,4 @@
+import time
 import aiocache
 import discord
 from rose.client import _Client
@@ -136,4 +137,7 @@ class RoseExt(_Client):
                 return discord.Embed(title="가입 되었습니다.")
 
     async def latency(self):
-        return await self.request("GET", "/")
+        heliotrope_latency1 = time.perf_counter()
+        await self.request("GET", "/")
+        heliotrope_latency2 = time.perf_counter()
+        return heliotrope_latency2 - heliotrope_latency1

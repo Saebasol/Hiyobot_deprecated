@@ -1,3 +1,4 @@
+import time
 import aiocache
 import aiohttp
 import discord
@@ -122,4 +123,7 @@ class HiyobiExt:
         await self.cache.set("hiyobi_search_embed", embed)
 
     async def latency(self):
-        return await request("GET", "/")
+        hiyobi_latency1 = time.perf_counter()
+        await request("GET", "/")
+        hiyobi_latency2 = time.perf_counter()
+        return hiyobi_latency2 - hiyobi_latency1
