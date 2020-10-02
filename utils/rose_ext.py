@@ -21,7 +21,7 @@ def make_embed_with_info(info: dict):
         description=f"[{info.language['value']}]({info.language['url']})",
         url=info.title["url"],
     )
-    embed.set_thumbnail(url=f"https://doujinshiman.ga/proxy/{info.thumbnail}")
+    embed.set_thumbnail(url=f"https://doujinshiman.ga/v2/api/proxy/{info.thumbnail}")
     embed.add_field(
         name="번호",
         value=f"[{info.galleryid}](https://hitomi.la/reader/{info.galleryid}.html)",
