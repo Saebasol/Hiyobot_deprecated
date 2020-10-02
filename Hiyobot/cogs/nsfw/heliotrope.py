@@ -8,7 +8,7 @@ from discord.ext import commands
 class Heliotrope(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.rose = RoseExt("")
+        self.rose = RoseExt(os.environ["heliotrope_auth"])
 
     @commands.command(name="리스트")
     @commands.is_nsfw()
