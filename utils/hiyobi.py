@@ -31,7 +31,7 @@ async def request(method, endpoint, json=None):
     url = "https://api.hiyobi.me" + endpoint
     async with aiohttp.ClientSession() as cs:
         async with cs.request(method, url, json=json) as r:
-            response = await r.json()
+            response = await r.json(content_type=None)
             return response
 
 
@@ -120,3 +120,6 @@ class HiyobiExt:
             for model in generator_hiyobi_info(lists["list"])
         ]
         await self.cache.set("hiyobi_search_embed", embed)
+
+    async def latency(self):
+        return await request("GET", "/")
