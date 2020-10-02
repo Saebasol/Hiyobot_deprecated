@@ -59,7 +59,6 @@ class Register(commands.Cog):
         new = await self.rose.register_embed(ctx.author.id, True)
 
         if new:
-            print(new)
             msg = await ctx.send(embed=embed)
             await msg.add_reaction("\U00002705")
             await msg.add_reaction("\U0000274e")
