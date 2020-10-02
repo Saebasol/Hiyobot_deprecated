@@ -26,7 +26,7 @@ def load_cogs(bot):
 
     for extension in extensions:
         try:
-            bot.load.extension("jishaku")
+            bot.load_extension("jishaku")
             bot.load_extension("Hiyobot.cogs." + extension)
         except Exception as e:
             print(e)
