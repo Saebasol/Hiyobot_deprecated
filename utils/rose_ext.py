@@ -117,6 +117,11 @@ class RoseExt(_Client):
                 return discord.Embed(
                     title="성공적으로 요청했어요", description="``&현황``을 사용해서 다운로드 현황을 확인할수 있어요."
                 )
+            else:
+                return discord.Embed(
+                    title="가입되지 않은 유저 이거나 오류가 발생했어요",
+                    description="``&가입``을 사용해서 가입할수있어요",
+                )
 
     async def progress_embed(self, user_id):
         progress = await self.progress(user_id)
