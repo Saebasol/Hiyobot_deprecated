@@ -12,6 +12,13 @@ class Nekos(commands.Cog):
 
     @commands.command(name="네코", aliases=["neko"])
     async def _neko(self, ctx, tag: str = None):
+        """
+        귀여운 네코미미를 보여줍니다. 태그를 사용해서 검색도 가능합니다.
+
+        인자값: 태그(선택)
+
+        사용법: ``&네코`` ``&네코 wallpaper``
+        """
         embed = discord.Embed()
 
         SFW_tags = [x.name for x in list(anekos.SFWImageTags)]

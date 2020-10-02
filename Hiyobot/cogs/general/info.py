@@ -22,7 +22,13 @@ class Info(commands.Cog):
 
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx):
+        """
+        봇의 자세한정보를 가져옵니다.
 
+        인자값: 없음
+
+        사용법: ``&정보``
+        """
         message_latency1 = time.perf_counter()
         await ctx.trigger_typing()
         message_latency2 = time.perf_counter()
