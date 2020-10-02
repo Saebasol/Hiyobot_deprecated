@@ -12,6 +12,13 @@ class Register(commands.Cog):
 
     @commands.command(name="가입")
     async def _register(self, ctx):
+        """
+        DB에 사용자를 등혹합니다.
+
+        인자값: 없음
+
+        사용법: ``&가입``
+        """
         embed = discord.Embed(
             title="개인정보 취급방침 및 약관",
             description="[Discord 지원 서버](https://discord.gg/PSshFYr)",
