@@ -124,11 +124,16 @@ class RoseExt(_Client):
         else:
             return make_embed_with_progress_info(progress.info)
 
-    async def register(self, user_id):
-        response = await self.register(user_id)
-        if response.status == 200:
-            return discord.Embed(title="이미 가입되어있습니다.")
-        elif response.status == 201:
-            return discord.Embed(title="가입 되었습니다.")
+    async def register_embed(self, user_id, check):
+        response = await self.register(user_id, check)
+        if check:
+            if response.status == 200:
+                return False
+            elif response.status == 404:
+                return True
         else:
-            return discord.Embed(title="잘못 되었습니다.")
+            if response.status == 201:
+                return discord.Embed(title="가입 되었습니다.")
+
+    async def latency(self):
+        return await self.request("GET", "/")
