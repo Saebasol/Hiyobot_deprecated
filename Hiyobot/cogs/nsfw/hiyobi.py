@@ -1,0 +1,61 @@
+from utils.pagenator import pagenator
+from utils.hiyobi import HiyobiExt
+import discord
+from discord.ext import commands
+
+
+class Hiyobi(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.hiyobi = HiyobiExt()
+
+    @commands.command(name="히요비리스트")
+    @commands.is_nsfw()
+    async def _hiyobi_list(self, ctx, num: int = 1):
+        """
+        히요비에서 최근 올라온 작품을 가져옵니다.
+
+        인자값: 페이지(기본값:1)
+
+        사용법: ``&히요비리스트`` ``&히요비리스트 2``
+        """
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
+        not_found = await self.hiyobi.cache_list_embed(num)
+        if not_found:
+            await msg.edit(embed=not_found)
+        await pagenator(self.bot, ctx, msg, self.hiyobi.cache, "hiyobi_list_embed")
+
+    @commands.command(name="히요비번호")
+    @commands.is_nsfw()
+    async def _hiyobi_info(self, ctx, index: int):
+        """
+        작품 번호를 입력하면 히요비에서 해당 작품정보를 가져옵니다.
+
+        인자값: 작품 번호(필수)
+
+        사용법: ``&히요비번호 1496588``
+        """
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
+        embed = await self.hiyobi.info_embed(index)
+        await msg.edit(embed=embed)
+
+    @commands.command(name="히요비검색")
+    @commands.is_nsfw()
+    async def _hiyobi_search(self, ctx, *keyword):
+        """
+        히요비에서 작품을 검색합니다.
+
+        인자값: 검색할 키워드(필수)
+
+        사용법: ``&히요비검색 파이하드``
+        """
+        search = list(keyword)
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
+        not_found = await self.hiyobi.cache_search_embed(search)
+        if not_found:
+            await msg.edit(embed=not_found)
+        await pagenator(self.bot, ctx, msg, self.hiyobi.cache, "hiyobi_search_embed")
+
+
+def setup(bot):
+    bot.add_cog(Hiyobi(bot))
