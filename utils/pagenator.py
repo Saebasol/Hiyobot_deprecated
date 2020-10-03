@@ -1,5 +1,6 @@
-import discord
 import asyncio
+
+import discord
 
 
 async def pagenator(bot, ctx, msg, cache_class, list_name):
