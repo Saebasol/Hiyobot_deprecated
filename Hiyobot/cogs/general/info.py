@@ -18,7 +18,7 @@ class Info(commands.Cog):
         self.bot = bot
         self.proc = psutil.Process()
         self.hiyobi = HiyobiExt()
-        self.rose = RoseExt("")
+        self.rose = RoseExt(os.environ["heliotrope_auth"])
 
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx):
