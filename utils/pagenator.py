@@ -16,6 +16,12 @@ async def pagenator(bot, ctx, msg, cache_class, list_name):
     await msg.add_reaction("◀")
     await msg.add_reaction("▶")
 
+    async def pass_permission_error(msg, emoji, author):
+        try:
+            await msg.remove_reaction(emoji, author)
+        except:
+            pass
+
     while True:
         try:
             reaction, user = await bot.wait_for(
@@ -45,7 +51,7 @@ async def pagenator(bot, ctx, msg, cache_class, list_name):
                     num = 0
 
                 await msg.edit(embed=embed_list[num])
-                await msg.remove_reaction("▶", ctx.author)
+                await pass_permission_error(msg, "▶", ctx.author)
 
             elif reaction.emoji == "◀":
 
@@ -56,4 +62,4 @@ async def pagenator(bot, ctx, msg, cache_class, list_name):
                     num = total - 1
 
                 await msg.edit(embed=embed_list[num])
-                await msg.remove_reaction("◀", ctx.author)
+                await pass_permission_error(msg, "◀", ctx.author)
