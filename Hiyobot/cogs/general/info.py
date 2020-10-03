@@ -8,7 +8,6 @@ import psutil
 from discord.ext import commands
 
 import Hiyobot
-
 from utils.hiyobi import HiyobiExt
 from utils.rose_ext import RoseExt
 
