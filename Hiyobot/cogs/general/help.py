@@ -1,8 +1,8 @@
-from utils.pagenator import pagenator
+import aiocache
 import discord
 from discord.ext import commands
 
-import aiocache
+from utils.pagenator import pagenator
 
 
 class Help(commands.Cog):
