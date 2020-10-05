@@ -38,6 +38,7 @@ class Info(commands.Cog):
         embed = discord.Embed(
             title=f"Info\nCommand prefix: `&`\nHiyobot: `{Hiyobot.__version__}`",
             description=f"Python `{sys.version}` on `{sys.platform}`".replace("\n", ""),
+            url="https://saebasol.statuspage.io/",
         )
         embed.add_field(
             name="discord.py version", value=f"{discord.__version__}", inline=False
@@ -75,11 +76,11 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
-            value=f"{hiyobi_latency}ms",
+            value=f"{hiyobi_latency if hiyobi_latency else '가져올수없음'}ms",
         )
         embed.add_field(
             name="Average Heliotrope server latency",
-            value=f"{heliotrope_latency}ms",
+            value=f"{heliotrope_latency if heliotrope_latency else '가져올수없음'}ms",
         )
         await ctx.send(embed=embed)
 
