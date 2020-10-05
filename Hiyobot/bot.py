@@ -1,6 +1,6 @@
 import logging
-import discord
 
+import discord
 from discord.ext.commands import Bot
 
 logger = logging.getLogger("discord")
