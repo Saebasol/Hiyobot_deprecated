@@ -8,7 +8,6 @@ import psutil
 from discord.ext import commands
 
 import Hiyobot
-
 from utils.hiyobi import HiyobiExt
 from utils.rose_ext import RoseExt
 
@@ -18,7 +17,7 @@ class Info(commands.Cog):
         self.bot = bot
         self.proc = psutil.Process()
         self.hiyobi = HiyobiExt()
-        self.rose = RoseExt("")
+        self.rose = RoseExt(os.environ["heliotrope_auth"])
 
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx):
@@ -33,13 +32,13 @@ class Info(commands.Cog):
         await ctx.trigger_typing()
         message_latency2 = time.perf_counter()
 
-        hiyobi_latency = await self.hiyobi.latency()
-
-        heliotrope_latency = await self.rose.latency()
+        hiyobi_latency = round(await self.hiyobi.latency() * 1000, 2)
+        heliotrope_latency = round(await self.rose.latency() * 1000, 2)
 
         embed = discord.Embed(
             title=f"Info\nCommand prefix: `&`\nHiyobot: `{Hiyobot.__version__}`",
             description=f"Python `{sys.version}` on `{sys.platform}`".replace("\n", ""),
+            url="https://saebasol.statuspage.io/",
         )
         embed.add_field(
             name="discord.py version", value=f"{discord.__version__}", inline=False
@@ -77,11 +76,11 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
-            value=f"{round(hiyobi_latency * 1000, 2)}ms",
+            value=f"{hiyobi_latency if hiyobi_latency else '가져올수없음'}ms",
         )
         embed.add_field(
             name="Average Heliotrope server latency",
-            value=f"{round(heliotrope_latency * 1000, 2)}ms",
+            value=f"{heliotrope_latency if heliotrope_latency else '가져올수없음'}ms",
         )
         await ctx.send(embed=embed)
 

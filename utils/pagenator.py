@@ -43,9 +43,6 @@ async def pagenator(bot, ctx, msg, cache_class, list_name):
                 return
 
             elif reaction.emoji == "▶":
-
-                total = total
-
                 num += 1
 
                 if num > total - 1:
@@ -55,9 +52,6 @@ async def pagenator(bot, ctx, msg, cache_class, list_name):
                 await pass_permission_error(msg, "▶", ctx.author)
 
             elif reaction.emoji == "◀":
-
-                total = total
-
                 num -= 1
                 if num < 0:
                     num = total - 1

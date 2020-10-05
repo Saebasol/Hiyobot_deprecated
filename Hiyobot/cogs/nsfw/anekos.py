@@ -48,10 +48,9 @@ class Nekos(commands.Cog):
                 else:
                     return await ctx.send("해당태그는 없어요! 태그는 ``&네코 도뭄말``을 통해 확인하실수있어요")
         else:
-            if not ctx.channel.nsfw:
-                image = await self.neko_client.image(random.choice(SFW_random))
-            else:
-                image = await self.neko_client.image(random.choice(NSFW_random))
+            image = await self.neko_client.image(
+                random.choice(SFW_random if not ctx.channel.nsfw else NSFW_random)
+            )
 
         embed.set_image(url=image.url)
         await ctx.send(embed=embed)
