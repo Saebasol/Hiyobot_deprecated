@@ -1,4 +1,5 @@
 import logging
+
 from discord.ext.commands import Bot
 
 logger = logging.getLogger("discord")
