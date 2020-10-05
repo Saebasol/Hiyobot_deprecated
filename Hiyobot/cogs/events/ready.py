@@ -13,11 +13,6 @@ class Ready(commands.Cog):
     # login,status
     @commands.Cog.listener()
     async def on_ready(self):
-        sentry_sdk.init(
-            dsn=os.environ["sentry"],
-            release=f"hiyobot@{Hiyobot.__version__}",
-        )
-
         # login
         print("Login.. : ")
         print(self.bot.user.name)
