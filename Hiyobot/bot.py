@@ -1,4 +1,5 @@
 import logging
+import discord
 
 from discord.ext.commands import Bot
 
@@ -39,4 +40,5 @@ def load_cogs(bot):
     return failed_list
 
 
-bot = Bot(command_prefix="&", help_command=None)
+intents = discord.Intents.all()
+bot = Bot(command_prefix="&", help_command=None, intents=intents)
