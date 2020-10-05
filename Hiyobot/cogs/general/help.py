@@ -1,8 +1,8 @@
-from utils.pagenator import pagenator
+import aiocache
 import discord
 from discord.ext import commands
 
-import aiocache
+from utils.pagenator import pagenator
 
 
 class Help(commands.Cog):
@@ -29,6 +29,7 @@ class Help(commands.Cog):
                 value=command.help,
                 inline=False,
             )
+            embed.set_footer(text="공식디코: https://discord.gg/PSshFYr")
 
             embed_list.append(embed)
 
