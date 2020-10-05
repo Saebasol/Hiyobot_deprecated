@@ -29,6 +29,7 @@ class Help(commands.Cog):
                 value=command.help,
                 inline=False,
             )
+            embed.set_footer(text="공식디코: https://discord.gg/PSshFYr")
 
             embed_list.append(embed)
 
