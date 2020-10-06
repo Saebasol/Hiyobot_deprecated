@@ -18,6 +18,7 @@ def load_cogs(bot):
         "events.error",
         "events.ready",
         "general.help",
+        "general.patchnote",
         "general.info",
         "general.register",
         "nsfw.anekos",
