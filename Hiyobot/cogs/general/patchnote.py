@@ -11,6 +11,12 @@ class PatchNote(commands.Cog):
 
     @commands.command(name="패치노트")
     async def _patchnote(self, ctx):
+        """
+        패치노트가 올라옵니다.
+        중요한 정보가 올라오니 꼭 확인해보세요!
+        
+        사용법: ``&패치노트``
+        """
         headers = {"Accept": "application/vnd.github.v3+json"}
         async with aiohttp.ClientSession() as cs:
             async with cs.get(
