@@ -40,6 +40,9 @@ All images are deleted every day.
 | sentry               | Sentry DSN               |
 | heliotrope_auth      | Heliotrope Authorization |
 | token                | Discord Bot token        |
+| status_api_key       | statuspage apikey        |
+| page_id              | statuspage page id       |
+| metric_id            | statuspoge metric id     |
 
 #### Windows
 
