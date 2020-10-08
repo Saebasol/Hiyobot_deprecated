@@ -1,4 +1,5 @@
 import time
+
 import aiocache
 import discord
 from rose.client import _Client
@@ -15,7 +16,9 @@ def parse_value_url(value_url_list: list):
 
 
 def make_embed_with_info(info: dict):
-    tags_join = ",".join(parse_value_url(info.tags))
+    tags_join = (
+        ",".join(parse_value_url(info.tags)).replace("♀️", "\♀️").replace("♂️", "\♂️")
+    )
     embed = discord.Embed(
         title=info.title["value"],
         description=f"[{info.language['value']}]({info.language['url']})",
