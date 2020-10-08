@@ -1,5 +1,4 @@
 import os
-from Hiyobot.bot import bot, load_cogs
+from Hiyobot.bot import bot
 
-load_cogs(bot)
 bot.run(os.environ["token"])

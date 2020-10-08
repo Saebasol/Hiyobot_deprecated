@@ -43,3 +43,4 @@ def load_cogs(bot):
 
 intents = discord.Intents.all()
 bot = Bot(command_prefix="&", help_command=None, intents=intents)
+load_cogs(bot)
