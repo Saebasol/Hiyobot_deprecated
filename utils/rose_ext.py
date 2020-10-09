@@ -17,7 +17,7 @@ def parse_value_url(value_url_list: list):
 
 def make_embed_with_info(info: dict):
     tags_join = (
-        ",".join(parse_value_url(info.tags)).replace("♀️", "\♀️").replace("♂️", "\♂️")
+        ", ".join(parse_value_url(info.tags)).replace("♀", "\♀").replace("♂", "\♂")
     )
     embed = discord.Embed(
         title=info.title["value"],
