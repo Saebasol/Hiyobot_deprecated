@@ -1,3 +1,4 @@
+from json.decoder import JSONDecodeError
 import os
 import sys
 import time
@@ -6,7 +7,7 @@ import discord
 import humanize
 import psutil
 from discord.ext import commands
-
+from aiohttp.client_exceptions import ContentTypeError
 import Hiyobot
 from utils.hiyobi import HiyobiExt
 from utils.rose_ext import RoseExt
@@ -32,8 +33,15 @@ class Info(commands.Cog):
         await ctx.trigger_typing()
         message_latency2 = time.perf_counter()
 
-        hiyobi_latency = round(await self.hiyobi.latency() * 1000, 2)
-        heliotrope_latency = round(await self.rose.latency() * 1000, 2)
+        try:
+            hiyobi_latency = round(await self.hiyobi.latency() * 1000, 2)
+        except JSONDecodeError:
+            hiyobi_latency = None
+
+        try:
+            heliotrope_latency = round(await self.rose.latency() * 1000, 2)
+        except ContentTypeError:
+            heliotrope_latency = None
 
         embed = discord.Embed(
             title=f"Info\nCommand prefix: `&`\nHiyobot: `{Hiyobot.__version__}`",
