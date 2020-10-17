@@ -40,6 +40,20 @@ class Heliotrope(commands.Cog):
         embed = await self.rose.info_embed(index)
         await msg.edit(embed=embed)
 
+    @commands.command(name="랜덤")
+    @commands.is_nsfw()
+    async def _random(self, ctx):
+        """
+        랜덤 으로 작품 정보 하나를 가져옵니다.
+
+        인자값: 없음
+
+        사용법: ``&랜덤``
+        """
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
+        embed = await self.rose.random_embed()
+        await msg.edit(embed=embed)
+
     @commands.command(name="뷰어")
     @commands.is_nsfw()
     async def _viewer(self, ctx, index: int):
