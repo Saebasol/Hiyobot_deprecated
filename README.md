@@ -38,7 +38,6 @@ All images are deleted every day.
 
 | Environment variable | value                    |
 | -------------------- | ------------------------ |
-| sentry               | Sentry DSN               |
 | heliotrope_auth      | Heliotrope Authorization |
 | token                | Discord Bot token        |
 | status_api_key       | statuspage apikey        |
