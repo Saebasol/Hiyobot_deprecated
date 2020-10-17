@@ -1,4 +1,5 @@
 import time
+from random import choice
 
 import aiocache
 import discord
@@ -94,6 +95,11 @@ class RoseExt(_Client):
         info = await self.info(index)
         if info.status != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
+        return make_embed_with_info(info)
+
+    async def random_embed(self):
+        index_list = self.index()
+        info = await self.info(choice(index_list))
         return make_embed_with_info(info)
 
     async def cache_viewer_embed(self, index):
