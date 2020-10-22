@@ -98,7 +98,7 @@ class RoseExt(_Client):
         return make_embed_with_info(info)
 
     async def random_embed(self):
-        index_list = self.index()
+        index_list = await self.index()
         info = await self.info(choice(index_list))
         return make_embed_with_info(info)
 
