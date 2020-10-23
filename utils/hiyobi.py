@@ -32,6 +32,8 @@ async def request(method, endpoint, json=None):
     url = "https://api.hiyobi.me" + endpoint
     async with aiohttp.ClientSession() as cs:
         async with cs.request(method, url, json=json) as r:
+            if r.status == 404:
+                return None
             response = await r.json(content_type=None)
             return response
 
