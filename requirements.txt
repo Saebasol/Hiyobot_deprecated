@@ -1,7 +1,7 @@
 aiohttp==3.7.1
 discord.py==1.5.1
 jishaku==1.19.2.202
-psutil==5.7.2
+psutil==5.7.3
 aiocache==0.11.1
 sentry-sdk==0.19.0
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper.git
