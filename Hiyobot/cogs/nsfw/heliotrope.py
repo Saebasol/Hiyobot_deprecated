@@ -67,7 +67,7 @@ class Heliotrope(commands.Cog):
         사용법: ``&뷰어 1496588``
         """
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
-        not_found = await self.rose.cache_viewer_embed(index)
+        not_found = await self.rose.cache_viewer_embed(index, ctx.author.id)
         if not_found:
             await msg.edit(embed=not_found)
         await pagenator(self.bot, ctx, msg, self.rose.cache, "viewer_embed")
