@@ -102,13 +102,13 @@ class RoseExt(_Client):
         info = await self.info(choice(index_list))
         return make_embed_with_info(info)
 
-    async def cache_viewer_embed(self, index):
+    async def cache_viewer_embed(self, index, user_id):
         galleryinfo = await self.galleryinfo(index)
         embed = []
         num = 0
         if galleryinfo.status != 200:
             return discord.Embed(title="정보를 찾을수 없습니다")
-        await self.download(index)
+        await self.download(index, user_id)
         for file_info in galleryinfo.files:
             num += 1
             embed.append(
