@@ -74,7 +74,7 @@ class Report(commands.Cog):
             ) as r:
                 if r.status != 404:
                     async with cs.post(
-                        f"https://api.statuspage.io/pages/{self.page._id}/incidents",
+                        f"https://api.statuspage.io/pages/{self.page_id}/incidents",
                         headers=headers,
                         json=make_incident(
                             datetime.datetime.now().isoformat(), self.components_id

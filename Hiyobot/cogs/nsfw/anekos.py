@@ -11,7 +11,7 @@ class Nekos(commands.Cog):
         self.neko_client = anekos.NekosLifeClient()
 
     @commands.command(name="네코", aliases=["neko"])
-    async def _neko(self, ctx, tag: str = None):
+    async def _neko(self, ctx: commands.Context, tag: str = None):
         """
         귀여운 네코미미를 보여줍니다. 태그를 사용해서 검색도 가능합니다.
 
@@ -56,5 +56,5 @@ class Nekos(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Nekos(bot))
