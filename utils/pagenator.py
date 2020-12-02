@@ -33,9 +33,9 @@ async def pagenator(
 
     while True:
         try:
-            var = await bot.wait_for(event="reaction_add", check=check, timeout=80.0)
-            reaction: discord.Reaction = var[0]
-            user: discord.User = var[1]
+            reaction, user = await bot.wait_for(
+                event="reaction_add", check=check, timeout=80.0
+            )
             if user.id != ctx.author.id or reaction.message.id != msg.id:
                 continue
 
