@@ -6,7 +6,7 @@ import Hiyobot
 
 class Ready(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -18,5 +18,5 @@ class Ready(commands.Cog):
         await self.bot.change_presence(status=discord.Status.online, activity=game)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Ready(bot))

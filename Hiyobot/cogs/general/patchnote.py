@@ -10,11 +10,11 @@ class PatchNote(commands.Cog):
         self.bot = bot
 
     @commands.command(name="패치노트")
-    async def _patchnote(self, ctx):
+    async def _patchnote(self, ctx: commands.Context):
         """
         패치노트가 올라옵니다.
         중요한 정보가 올라오니 꼭 확인해보세요!
-        
+
         사용법: ``&패치노트``
         """
         headers = {"Accept": "application/vnd.github.v3+json"}
@@ -37,5 +37,5 @@ class PatchNote(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(PatchNote(bot))
