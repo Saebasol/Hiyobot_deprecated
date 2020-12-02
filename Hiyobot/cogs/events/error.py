@@ -6,7 +6,7 @@ class Error(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(
                 "명령어를 찾을 수 없습니다. `&도움말` 명령어를 사용해 전체 명령어 목록을 볼 수 있습니다.", delete_after=5
@@ -31,5 +31,5 @@ class Error(commands.Cog):
             )
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Error(bot))

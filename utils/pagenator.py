@@ -1,9 +1,16 @@
 import asyncio
 
 import discord
+from discord.ext import commands
 
 
-async def pagenator(bot, ctx, msg, cache_class, list_name):
+async def pagenator(
+    bot: commands.Bot,
+    ctx: commands.Context,
+    msg: discord.Message,
+    cache_class,
+    list_name,
+):
     num = 0
     embed_list = await cache_class.get(list_name)
 
@@ -17,7 +24,7 @@ async def pagenator(bot, ctx, msg, cache_class, list_name):
     await msg.add_reaction("◀")
     await msg.add_reaction("▶")
 
-    async def pass_permission_error(msg, emoji, author):
+    async def pass_permission_error(msg: discord.Message, emoji, author):
         try:
             await msg.remove_reaction(emoji, author)
         except:

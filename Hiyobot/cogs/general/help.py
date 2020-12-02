@@ -7,7 +7,7 @@ from utils.pagenator import pagenator
 
 class Help(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.cache = aiocache.Cache()
 
     @commands.command(name="도움말", aliases=["help", "도움", "commands", "명령어"])
@@ -37,5 +37,5 @@ class Help(commands.Cog):
         await pagenator(self.bot, ctx, msg, self.cache, "help_embed")
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_cog(Help(bot))

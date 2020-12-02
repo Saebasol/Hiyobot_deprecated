@@ -12,7 +12,7 @@ handler.setFormatter(
 logger.addHandler(handler)
 
 
-def load_cogs(bot):
+def load_cogs(bot: Bot):
     extensions = [
         "jishaku",
         "events.error",
@@ -20,7 +20,6 @@ def load_cogs(bot):
         "general.help",
         "general.patchnote",
         "general.info",
-        "general.register",
         "nsfw.anekos",
         "nsfw.heliotrope",
         "nsfw.hiyobi",

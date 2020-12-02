@@ -1,13 +1,14 @@
-from json.decoder import JSONDecodeError
 import os
 import sys
 import time
+from json.decoder import JSONDecodeError
 
 import discord
 import humanize
 import psutil
-from discord.ext import commands
 from aiohttp.client_exceptions import ContentTypeError
+from discord.ext import commands
+
 import Hiyobot
 from utils.hiyobi import HiyobiExt
 from utils.rose_ext import RoseExt
@@ -15,13 +16,13 @@ from utils.rose_ext import RoseExt
 
 class Info(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: commands.Bot = bot
         self.proc = psutil.Process()
         self.hiyobi = HiyobiExt()
         self.rose = RoseExt(os.environ["heliotrope_auth"])
 
     @commands.command(name="정보", aliases=["info"])
-    async def _botinfo(self, ctx):
+    async def _botinfo(self, ctx: commands.Context):
         """
         봇의 자세한정보를 가져옵니다.
 
