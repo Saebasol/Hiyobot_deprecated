@@ -116,40 +116,6 @@ class RoseExt(_Client):
             )
         await self.cache.set("viewer_embed", embed)
 
-    async def download_embed(self, user_id, index):
-        galleryinfo = await self.galleryinfo(index)
-        if galleryinfo.status != 200:
-            return discord.Embed(title="정보를 찾을수 없습니다")
-        else:
-            response = await self.download(index, user_id, True)
-            if response.status == 200:
-                return discord.Embed(
-                    title="성공적으로 요청했어요", description="``&현황``을 사용해서 다운로드 현황을 확인할수 있어요."
-                )
-            else:
-                return discord.Embed(
-                    title="가입되지 않은 유저 이거나 오류가 발생했어요",
-                    description="``&가입``을 사용해서 가입할수있어요",
-                )
-
-    async def progress_embed(self, user_id):
-        progress = await self.progress(user_id)
-        if progress.status != 200:
-            return discord.Embed(title="기록을 찾을수 없습니다")
-        else:
-            return make_embed_with_progress_info(progress.info)
-
-    async def register_embed(self, user_id, check):
-        response = await self.register(user_id, check)
-        if check:
-            if response.status == 200:
-                return False
-            elif response.status == 404:
-                return True
-        else:
-            if response.status == 201:
-                return discord.Embed(title="가입 되었습니다.")
-
     async def latency(self):
         heliotrope_latency1 = time.perf_counter()
         await self.request("GET", "/")
