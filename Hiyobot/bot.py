@@ -12,7 +12,7 @@ handler.setFormatter(
 logger.addHandler(handler)
 
 
-def load_cogs(bot):
+def load_cogs(bot: Bot):
     extensions = [
         "jishaku",
         "events.error",
