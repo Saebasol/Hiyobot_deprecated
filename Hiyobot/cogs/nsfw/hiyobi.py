@@ -1,7 +1,8 @@
-from utils.pagenator import pagenator
-from utils.hiyobi import HiyobiExt
 import discord
 from discord.ext import commands
+
+from utils.hiyobi import HiyobiExt
+from utils.pagenator import pagenator
 
 
 class Hiyobi(commands.Cog):
