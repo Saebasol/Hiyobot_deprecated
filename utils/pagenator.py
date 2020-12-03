@@ -20,7 +20,7 @@ async def pagenator(
         return (user.id == ctx.author.id) and (reaction.emoji in ["▶", "◀", "❎"])
 
     await msg.edit(embed=embed_list[num])
-    await msg.add_reaction(emoji="❎")
+    await msg.add_reaction("❎")
     await msg.add_reaction("◀")
     await msg.add_reaction("▶")
 

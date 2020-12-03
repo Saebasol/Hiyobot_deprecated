@@ -15,7 +15,7 @@ class PatchNote(commands.Cog):
         패치노트가 올라옵니다.
         중요한 정보가 올라오니 꼭 확인해보세요!
 
-        사용법: ``&패치노트``
+        사용 예시 : ``&패치노트``
         """
         headers = {"Accept": "application/vnd.github.v3+json"}
         async with aiohttp.ClientSession() as cs:
@@ -25,7 +25,7 @@ class PatchNote(commands.Cog):
             ) as r:
                 if r.status == 404:
                     return await ctx.send(
-                        f"해당 버전 ``{Hiyobot.__version__}``의 릴리즈가 아직 존재하지않아요."
+                        f"해당 버전 ``{Hiyobot.__version__}``의 릴리즈가 아직 존재하지 않아요."
                     )
                 response_json = await r.json()
 
