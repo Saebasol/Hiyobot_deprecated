@@ -91,7 +91,7 @@ def make_embed_with_info(info: HiyobiTagsModel):
     )
     embed.add_field(
         name="태그",
-        value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무길어요",
+        value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무 길어요.",
         inline=False,
     )
     return embed
@@ -104,7 +104,7 @@ class HiyobiExt:
     async def cache_list_embed(self, number: int):
         lists = await get_list(number)
         if lists["count"] == 0:
-            return discord.Embed(title="정보를 찾을수 없습니다")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         embed = [
             make_embed_with_info(model)
             for model in generator_hiyobi_info(lists["list"])
@@ -118,7 +118,7 @@ class HiyobiExt:
     async def cache_search_embed(self, search_keyword: list):
         lists = await post_search(search_keyword)
         if lists["count"] == 0:
-            return discord.Embed(title="정보를 찾을수 없습니다")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         embed = [
             make_embed_with_info(model)
             for model in generator_hiyobi_info(lists["list"])
