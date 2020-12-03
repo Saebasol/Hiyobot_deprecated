@@ -48,7 +48,7 @@ def make_embed_with_info(info: dict):
     )
     embed.add_field(
         name="태그",
-        value=tags_join if len(tags_join) <= 1024 else "태그가 너무 많아요.",
+        value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무 길어요.",
         inline=False,
     )
     return embed
