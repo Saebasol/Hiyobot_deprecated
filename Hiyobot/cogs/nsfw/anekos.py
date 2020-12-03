@@ -37,7 +37,9 @@ class Nekos(commands.Cog):
             upper_tag = tag.upper()
             if not ctx.channel.nsfw:
                 if upper_tag in NSFW_tags:
-                    return await ctx.send("해당 태그는 성인 태그인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요.")
+                    return await ctx.send(
+                        "해당 태그는 성인 태그인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요."
+                    )
                 elif upper_tag in SFW_tags:
                     image = await self.neko_client.image(upper_tag.lower())
                 else:
