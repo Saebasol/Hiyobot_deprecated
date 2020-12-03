@@ -26,9 +26,7 @@ class Info(commands.Cog):
         """
         봇의 자세한 정보를 가져옵니다.
 
-        사용할 수 있는 값 : 없음
-
-        사용  : ``&정보``
+        사용 예시 : ``&정보``
         """
         message_latency1 = time.perf_counter()
         await ctx.trigger_typing()
