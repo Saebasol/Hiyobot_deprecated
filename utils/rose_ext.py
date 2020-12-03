@@ -48,26 +48,9 @@ def make_embed_with_info(info: dict):
     )
     embed.add_field(
         name="태그",
-        value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무길어요",
+        value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무 길어요.",
         inline=False,
     )
-    return embed
-
-
-def make_embed_with_progress_info(progress: list):
-    embed = discord.Embed(title="다운로드 정보입니다.")
-
-    for info in progress:
-        if not info.link:
-            link = ""
-        else:
-            link = f"다운로드: [링크]({info.link})"
-
-        embed.add_field(
-            name=info.index,
-            value=f"남은 횟수: {info.count}\n\n진행 상황: {info.task_status}\n\n{link}",
-        )
-
     return embed
 
 
@@ -75,7 +58,7 @@ def make_viewer_embed(index: int, file_name: str, total, num):
     return (
         discord.Embed()
         .set_image(url=f"https://doujinshiman.ga/image/{index}/{file_name}")
-        .set_footer(text=f"{total}쪽중 {num}쪽")
+        .set_footer(text=f"{total}/{num} 페이지")
     )
 
 
@@ -87,14 +70,14 @@ class RoseExt(_Client):
     async def cache_list_embed(self, number):
         lists = await self.list_(number)
         if lists.status != 200:
-            return discord.Embed(title="정보를 찾을수 없습니다")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         embed = [make_embed_with_info(list_) for list_ in lists.list]
         await self.cache.set("list_embed", embed)
 
     async def info_embed(self, index):
         info = await self.info(index)
         if info.status != 200:
-            return discord.Embed(title="정보를 찾을수 없습니다")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         return make_embed_with_info(info)
 
     async def random_embed(self):
@@ -107,7 +90,7 @@ class RoseExt(_Client):
         embed = []
         num = 0
         if galleryinfo.status != 200:
-            return discord.Embed(title="정보를 찾을수 없습니다")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         await self.download(index, user_id)
         for file_info in galleryinfo.files:
             num += 1

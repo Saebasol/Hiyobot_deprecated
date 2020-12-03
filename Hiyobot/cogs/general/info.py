@@ -24,11 +24,9 @@ class Info(commands.Cog):
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx: commands.Context):
         """
-        봇의 자세한정보를 가져옵니다.
+        봇의 자세한 정보를 가져옵니다.
 
-        인자값: 없음
-
-        사용법: ``&정보``
+        사용 예시 : ``&정보``
         """
         message_latency1 = time.perf_counter()
         await ctx.trigger_typing()
@@ -85,11 +83,11 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
-            value=f"{hiyobi_latency if hiyobi_latency else '가져올수없음'}ms",
+            value=f"{hiyobi_latency if hiyobi_latency else '가져올 수 없음'}ms",
         )
         embed.add_field(
             name="Average Heliotrope server latency",
-            value=f"{heliotrope_latency if heliotrope_latency else '가져올수없음'}ms",
+            value=f"{heliotrope_latency if heliotrope_latency else '가져올 수 없음'}ms",
         )
         await ctx.send(embed=embed)
 
