@@ -20,7 +20,7 @@ class Heliotrope(commands.Cog):
 
         사용할 수 있는 값 : 페이지(입력하지 않을 경우 1)
 
-        사용 예시 : ``&리스트``  ``&리스트 2``
+        사용 예시 : ``&리스트`` 또는 ``&리스트 2``
         """
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요")
