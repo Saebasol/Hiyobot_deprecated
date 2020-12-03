@@ -54,23 +54,6 @@ def make_embed_with_info(info: dict):
     return embed
 
 
-def make_embed_with_progress_info(progress: list):
-    embed = discord.Embed(title="다운로드 정보입니다.")
-
-    for info in progress:
-        if not info.link:
-            link = ""
-        else:
-            link = f"다운로드: [링크]({info.link})"
-
-        embed.add_field(
-            name=info.index,
-            value=f"남은 횟수: {info.count}\n\n진행 상황: {info.task_status}\n\n{link}",
-        )
-
-    return embed
-
-
 def make_viewer_embed(index: int, file_name: str, total, num):
     return (
         discord.Embed()
