@@ -70,14 +70,14 @@ class RoseExt(_Client):
     async def cache_list_embed(self, number):
         lists = await self.list_(number)
         if lists.status != 200:
-            return discord.Embed(title="정보를 불러오지 못했습니다.")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         embed = [make_embed_with_info(list_) for list_ in lists.list]
         await self.cache.set("list_embed", embed)
 
     async def info_embed(self, index):
         info = await self.info(index)
         if info.status != 200:
-            return discord.Embed(title="정보를 불러오지 못했습니다.")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         return make_embed_with_info(info)
 
     async def random_embed(self):
@@ -90,7 +90,7 @@ class RoseExt(_Client):
         embed = []
         num = 0
         if galleryinfo.status != 200:
-            return discord.Embed(title="정보를 불러오지 못했습니다.")
+            return discord.Embed(title="정보를 찾지 못했습니다.")
         await self.download(index, user_id)
         for file_info in galleryinfo.files:
             num += 1
