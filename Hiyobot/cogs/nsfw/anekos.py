@@ -30,7 +30,8 @@ class Nekos(commands.Cog):
         if tag == "도움말":
             embed = discord.Embed(title="사용할 수 있는 태그 목록입니다.")
             embed.add_field(name="전연령 태그", value="\n".join(SFW_tags))
-            embed.add_field(name="성인 태그", value="\n".join(NSFW_tags))
+            if ctx.channel.nsfw:
+                embed.add_field(name="성인 태그", value="\n".join(NSFW_tags))
             return await ctx.send(embed=embed)
 
         if tag:
