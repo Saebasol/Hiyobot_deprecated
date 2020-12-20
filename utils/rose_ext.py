@@ -95,7 +95,7 @@ class RoseExt(_Client):
         img_list = await self.images(index)
         for file_info in img_list["images"]:
             num += 1
-            embed.append(make_viewer_embed(file_info, len(galleryinfo.files), num))
+            embed.append(make_viewer_embed(file_info["url"], len(galleryinfo.files), num))
         await self.cache.set("viewer_embed", embed)
 
     async def latency(self):
