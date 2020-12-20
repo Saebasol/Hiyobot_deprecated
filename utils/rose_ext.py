@@ -25,7 +25,7 @@ def make_embed_with_info(info: dict):
         description=f"[{info.language['value']}]({info.language['url']})",
         url=info.title["url"],
     )
-    embed.set_thumbnail(url=f"https://doujinshiman.ga/v2/api/proxy/{info.thumbnail}")
+    embed.set_thumbnail(url=f"https://doujinshiman.ga/v3/api/proxy/{info.thumbnail}")
     embed.add_field(
         name="번호",
         value=f"[{info.galleryid}](https://hitomi.la/reader/{info.galleryid}.html)",
@@ -54,10 +54,10 @@ def make_embed_with_info(info: dict):
     return embed
 
 
-def make_viewer_embed(index: int, file_name: str, total, num):
+def make_viewer_embed(file_name: str, total, num):
     return (
         discord.Embed()
-        .set_image(url=f"https://doujinshiman.ga/image/{index}/{file_name}")
+        .set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{file_name}")
         .set_footer(text=f"{total}/{num} 페이지")
     )
 
@@ -85,17 +85,18 @@ class RoseExt(_Client):
         info = await self.info(choice(index_list))
         return make_embed_with_info(info)
 
-    async def cache_viewer_embed(self, index, user_id):
+    async def cache_viewer_embed(self, index):
         galleryinfo = await self.galleryinfo(index)
         embed = []
         num = 0
         if galleryinfo.status != 200:
             return discord.Embed(title="정보를 찾지 못했습니다.")
-        await self.download(index, user_id)
-        for file_info in galleryinfo.files:
+
+        img_list = await self.images(index)
+        for file_info in img_list["images"]:
             num += 1
             embed.append(
-                make_viewer_embed(index, file_info.name, len(galleryinfo.files), num)
+                make_viewer_embed(index, file_info, len(galleryinfo.files), num)
             )
         await self.cache.set("viewer_embed", embed)
 
