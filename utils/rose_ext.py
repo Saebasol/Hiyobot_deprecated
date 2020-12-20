@@ -57,7 +57,7 @@ def make_embed_with_info(info: dict):
 def make_viewer_embed(file_name: str, total, num):
     return (
         discord.Embed()
-        .set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{file_name}")
+        .set_image(url=file_name)
         .set_footer(text=f"{total}/{num} 페이지")
     )
 
