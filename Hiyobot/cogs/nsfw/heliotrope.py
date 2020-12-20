@@ -60,23 +60,23 @@ class Heliotrope(commands.Cog):
         embed = await self.rose.random_embed()
         await msg.edit(embed=embed)
 
-    # @commands.command(name="뷰어")
-    # @commands.is_nsfw()
-    # async def _viewer(self, ctx: commands.Context, index: int):
-    #     """
-    #     작품 번호를 입력하면 디스코드 내에서 보여줍니다.
+    @commands.command(name="뷰어")
+    @commands.is_nsfw()
+    async def _viewer(self, ctx: commands.Context, index: int):
+        """
+        작품 번호를 입력하면 디스코드 내에서 보여줍니다.
 
-    #     인자값: 작품 번호(필수)
+        인자값: 작품 번호(필수)
 
-    #     사용법: ``&뷰어 1496588``
-    #     """
-    #     msg: discord.Message = await ctx.send(
-    #         embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
-    #     )
-    #     not_found = await self.rose.cache_viewer_embed(index, ctx.author.id)
-    #     if not_found:
-    #         await msg.edit(embed=not_found)
-    #     await pagenator(self.bot, ctx, msg, self.rose.cache, "viewer_embed")
+        사용법: ``&뷰어 1496588``
+        """
+        msg: discord.Message = await ctx.send(
+            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
+        )
+        not_found = await self.rose.cache_viewer_embed(index)
+        if not_found:
+            await msg.edit(embed=not_found)
+        await pagenator(self.bot, ctx, msg, self.rose.cache, "viewer_embed")
 
 
 def setup(bot: commands.Bot):
