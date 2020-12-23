@@ -58,7 +58,7 @@ def make_viewer_embed(file_name: str, total, num):
     return (
         discord.Embed()
         .set_image(url=file_name)
-        .set_footer(text=f"{total}/{num} 페이지")
+        .set_footer(text=f"{num}/{total} 페이지")
     )
 
 
