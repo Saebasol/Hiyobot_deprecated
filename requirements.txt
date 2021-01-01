@@ -1,7 +1,7 @@
 aiohttp==3.6.3
 discord.py==1.5.1
-jishaku==1.19.2.202
-psutil==5.7.3
+jishaku==1.20.0.220
+psutil==5.8.0
 aiocache==0.11.1
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper.git
 git+https://github.com/SaidBySolo/Rose.git
