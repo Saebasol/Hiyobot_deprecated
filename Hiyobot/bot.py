@@ -1,4 +1,5 @@
 import logging
+import os
 
 import discord
 from discord.ext.commands import Bot
@@ -20,6 +21,7 @@ def load_cogs(bot: Bot):
         "general.help",
         "general.patchnote",
         "general.info",
+        "general.auth",
         "nsfw.anekos",
         "nsfw.heliotrope",
         "nsfw.hiyobi",
@@ -40,5 +42,18 @@ def load_cogs(bot: Bot):
     return failed_list
 
 
+class Bot(Bot):
+    def __init__(
+        self, command_prefix, help_command=None, description=None, **options
+    ) -> None:
+        super().__init__(
+            command_prefix,
+            help_command=help_command,
+            description=description,
+            **options
+        )
+        self.github_token = os.environ.get("GitHub")
+
+
 intents = discord.Intents.all()
-bot = Bot(command_prefix="&", help_command=None, intents=intents)
+bot = Bot(command_prefix="&", intents=intents)

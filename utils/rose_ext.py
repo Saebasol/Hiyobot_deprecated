@@ -56,9 +56,7 @@ def make_embed_with_info(info: dict):
 
 def make_viewer_embed(file_name: str, total, num):
     return (
-        discord.Embed()
-        .set_image(url=file_name)
-        .set_footer(text=f"{total}/{num} 페이지")
+        discord.Embed().set_image(url=file_name).set_footer(text=f"{num}/{total} 페이지")
     )
 
 
@@ -95,7 +93,9 @@ class RoseExt(_Client):
         img_list = await self.images(index)
         for file_info in img_list["images"]:
             num += 1
-            embed.append(make_viewer_embed(file_info["url"], len(galleryinfo.files), num))
+            embed.append(
+                make_viewer_embed(file_info["url"], len(galleryinfo.files), num)
+            )
         await self.cache.set("viewer_embed", embed)
 
     async def latency(self):
