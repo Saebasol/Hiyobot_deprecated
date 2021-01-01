@@ -1,11 +1,10 @@
 import asyncio
-import re
-
 import aiohttp
 import discord
 from discord.ext import commands
 
 from Hiyobot.bot import Bot
+import re
 
 
 class Auth(commands.Cog):
@@ -23,7 +22,7 @@ class Auth(commands.Cog):
             }
         ) as cs:
             async with cs.get(
-                f"https://api.github.com/repos/Saebasol/test/issues"
+                f"https://api.github.com/repos/Saebasol/register/issues"
             ) as r:
                 response = await r.json()
                 for body in response:
@@ -103,7 +102,7 @@ class Auth(commands.Cog):
     """,
             }
             async with cs.post(
-                f"https://api.github.com/repos/Saebasol/test/issues",
+                f"https://api.github.com/repos/Saebasol/register/issues",
                 json=json,
             ) as r:
                 if r.status != 201:
