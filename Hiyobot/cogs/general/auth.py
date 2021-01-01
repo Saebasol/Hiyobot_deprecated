@@ -31,8 +31,10 @@ class Auth(commands.Cog):
                         re.findall(r"user id: ``(.+?)``", str(body["body"]))[0]
                     ):
                         msg = await ctx.send(
-                            embed=discord.Embed(title="이미 있으신거 같아요. 기존 요청을 취소할까요?")
+                            embed=discord.Embed(title="이미 요청하셨네요. 기존 요청을 취소할까요?")
                         )
+                        await msg.add_reaction("✅")
+                        await msg.add_reaction("❎")
                         try:
                             reaction, user = await self.bot.wait_for(
                                 "reaction_add",
@@ -56,7 +58,7 @@ class Auth(commands.Cog):
                                 ) as r:
                                     if r.status == 200:
                                         response = await r.json()
-                                        await msg.edit(
+                                        return await msg.edit(
                                             embed=discord.Embed(
                                                 title="성공적으로 요청했어요.",
                                                 description=f"[이곳]({response['html_url']})에서 확인하실수 있을거에요.",
@@ -89,18 +91,18 @@ class Auth(commands.Cog):
             json = {
                 "title": f"{ctx.author} has requested to use the Heliotrope",
                 "body": f"""
-    # The information is as follows
+# The information is as follows
 
-    name: ``{ctx.author}``
+name: ``{ctx.author}``
 
-    user id: ``{ctx.author.id}``
+user id: ``{ctx.author.id}``
 
-    created_at: ``{ctx.author.created_at}``
+created_at: ``{ctx.author.created_at}``
 
-    purpose: ``{purpose}``
+purpose: ``{' '.join(purpose)}``
 
-    Request to use API, so please approve it.
-    """,
+Request to use API, so please approve it.
+""",
             }
             async with cs.post(
                 f"https://api.github.com/repos/Saebasol/register/issues",
