@@ -1,10 +1,11 @@
 import asyncio
+import re
+
 import aiohttp
 import discord
 from discord.ext import commands
 
 from Hiyobot.bot import Bot
-import re
 
 
 class Auth(commands.Cog):
