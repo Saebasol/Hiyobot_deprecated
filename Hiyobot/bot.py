@@ -21,6 +21,7 @@ def load_cogs(bot: Bot):
         "general.help",
         "general.patchnote",
         "general.info",
+        "general.auth",
         "nsfw.anekos",
         "nsfw.heliotrope",
         "nsfw.hiyobi",
