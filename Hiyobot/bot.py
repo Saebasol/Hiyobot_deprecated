@@ -53,6 +53,7 @@ class Bot(Bot):
             **options
         )
         self.github_token = os.environ.get("GitHub")
+        self.verify = os.environ.get("VERIFY")
 
 
 intents = discord.Intents.all()

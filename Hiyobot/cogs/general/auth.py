@@ -15,13 +15,23 @@ class Auth(commands.Cog):
     @commands.command(name="api")
     async def _api(self, ctx: commands.Context, *purpose):
         if not purpose:
-            await ctx.send("사용할 목적을 적어주셔야해요!")
+            return await ctx.send("사용할 목적을 적어주셔야해요!")
         async with aiohttp.ClientSession(
             headers={
                 "Accept": "application/vnd.github.v3+json",
                 "Authorization": f"token {self.bot.github_token}",
             }
         ) as cs:
+            async with cs.post(
+                "https://doujishiman.ga/v3/api/register",
+                json={"user_id": ctx.author.id},
+                headers={"Verification": f"check {self.bot.verify}"},
+            ) as res:
+                if res.status == 200:
+                    r = res.json()
+                    return await ctx.send(
+                        f"이미 등록되어있어요: ``{r['api_key']}``", delete_after=10
+                    )
             async with cs.get(
                 f"https://api.github.com/repos/Saebasol/register/issues"
             ) as r:
