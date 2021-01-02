@@ -23,7 +23,7 @@ class Auth(commands.Cog):
             }
         ) as cs:
             async with cs.post(
-                "https://doujishiman.ga/v3/api/register",
+                "https://doujinshiman.ga/v3/api/register",
                 json={"user_id": ctx.author.id},
                 headers={"Verification": f"check {self.bot.verify}"},
             ) as res:
