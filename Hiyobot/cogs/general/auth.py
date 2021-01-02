@@ -28,7 +28,7 @@ class Auth(commands.Cog):
                 headers={"Verification": f"check {self.bot.verify}"},
             ) as res:
                 if res.status == 200:
-                    r = res.json()
+                    r = await res.json()
                     return await ctx.send(
                         f"이미 등록되어있어요: ``{r['api_key']}``", delete_after=10
                     )
