@@ -5,6 +5,9 @@ from utils.pixiv import PixivExt
 from utils.pixiv import is_r18
 
 
+embed_r18 = discord.Embed(title="해당 일러스트는 R-18 인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요.")
+
+
 class Pixiv(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -23,8 +26,7 @@ class Pixiv(commands.Cog):
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
         if is_r18(index):
-            await msg.delete()
-            return await ctx.send("해당 일러스트는 R-18 인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요.")
+            return await msg.edit(embed=embed_r18)
         embed = self.pixiv.illust_embed(index)
         await msg.edit(embed=embed)
 
@@ -41,8 +43,7 @@ class Pixiv(commands.Cog):
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
         if is_r18(index):
-            await msg.delete()
-            return await ctx.send("해당 일러스트는 R-18 인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요.")
+            return await msg.edit(embed=embed_r18)
         embed = self.pixiv.info_embed(index)
         await msg.edit(embed=embed)
 

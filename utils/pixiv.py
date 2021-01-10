@@ -36,7 +36,7 @@ async def request(method, endpoint, json=None):
         async with cs.request(method, url, json=json) as r:
             if r.status == 404:
                 return None
-            response = await r.json(content_tyoe=None)
+            response = await r.json(content_type=None)
             return response
 
 
