@@ -5,7 +5,7 @@ from utils.pixiv import PixivExt
 from utils.pixiv import is_r18
 
 
-embed_r18 = discord.Embed(title="해당 일러스트는 R-18 인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요.")
+embed_r18 = discord.Embed(title="해당 일러스트는 R-18 인 것 같습니다.\n연령 제한이 설정된 채널에서 사용해주세요.")
 
 
 class Pixiv(commands.Cog):
@@ -25,9 +25,9 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        if is_r18(index):
+        if await is_r18(index):
             return await msg.edit(embed=embed_r18)
-        embed = self.pixiv.illust_embed(index)
+        embed = await self.pixiv.illust_embed(index)
         await msg.edit(embed=embed)
 
     @commands.command(name="픽시브번호")
@@ -42,9 +42,9 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        if is_r18(index):
+        if await is_r18(index):
             return await msg.edit(embed=embed_r18)
-        embed = self.pixiv.info_embed(index)
+        embed = await self.pixiv.info_embed(index)
         await msg.edit(embed=embed)
 
     @commands.command(name="픽시브랭킹")
@@ -63,6 +63,7 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
+        embed = await self.pixiv.ranking_embed(f"{mode}")
 
     @commands.command(name="픽시브랭킹H")
     @commands.is_nsfw()
@@ -81,4 +82,8 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = self.pixiv.ranking_embed(f"{mode}_r18")
+        embed = await self.pixiv.ranking_embed(f"{mode}_r18")
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(Pixiv(bot))
