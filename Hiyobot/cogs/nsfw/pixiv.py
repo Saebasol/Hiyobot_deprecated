@@ -25,8 +25,9 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        if await is_r18(index):
-            return await msg.edit(embed=embed_r18)
+        if not ctx.channel.nsfw:
+            if await is_r18(index):
+                return await msg.edit(embed=embed_r18)
         embed = await self.pixiv.illust_embed(index)
         await msg.edit(embed=embed)
 
@@ -42,8 +43,9 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        if await is_r18(index):
-            return await msg.edit(embed=embed_r18)
+        if not ctx.channel.nsfw:
+            if await is_r18(index):
+                return await msg.edit(embed=embed_r18)
         embed = await self.pixiv.info_embed(index)
         await msg.edit(embed=embed)
 
