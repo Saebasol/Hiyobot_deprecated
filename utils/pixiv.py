@@ -46,6 +46,11 @@ async def get_original_url(illust_id):
     return url
 
 
+async def get_user_icon(user_id):
+    resp = await request("GET", f"ajax/user/{user_id}")
+    return resp["body"]["image"]
+
+
 async def is_r18(illust_id):
     resp = await request("GET", f"ajax/illust/{illust_id}")
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
@@ -56,13 +61,23 @@ class PixivExt:
         self.cache = aiocache.Cache()
 
     async def illust_embed(self, illust_id):
+        resp = await request("GET", f"ajax/illust/{illust_id}")
+        user_id = resp["body"]["userId"]
+        user_name = resp["body"]["userName"]
+        user_icon = await get_user_icon(user_id)
         url = await get_original_url(illust_id)
         embed = discord.Embed()
         embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(url)}")
+        embed.set_author(
+            name=resp["body"]["illustTitle"],
+            icon_url=user_icon,
+            url=f"https://www.pixiv.net/artworks/{illust_id}"
+        )
+        embed.set_footer(text=f"Illust by {user_name}")
         return embed
 
     async def info_embed(self, illust_id):
-        resp = request("GET", f"ajax/illust/{illust_id}")
+        resp = await request("GET", f"ajax/illust/{illust_id}")
         url = await get_original_url(illust_id)
         """
         tags = [t["translation"]["en"] for t in resp["body"]["tags"]["tags"]]
@@ -84,7 +99,7 @@ class PixivExt:
             name=":heart:", value=resp["body"]["bookmarkCount"]
         )
         embed.add_field(
-            name=":eye:", value=resp["body"]["viewCount"], inline=False
+            name=":eye:", value=resp["body"]["viewCount"]
         )
         """
         embed.add_field(

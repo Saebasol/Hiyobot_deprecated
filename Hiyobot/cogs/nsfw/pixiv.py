@@ -31,14 +31,14 @@ class Pixiv(commands.Cog):
         embed = await self.pixiv.illust_embed(index)
         await msg.edit(embed=embed)
 
-    @commands.command(name="픽시브번호")
+    @commands.command(name="픽시브정보")
     async def _pixiv_info(self, ctx: commands.Context, index: int):
         """
         작품 번호를 입력하면 픽시브에서 해당 작품정보를 가져옵니다.
 
         사용할 수 있는 값 : 작품 번호(필수)
 
-        사용 예시 : ``&픽시브번호 86094006``
+        사용 예시 : ``&픽시브정보 86094006``
         """
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
