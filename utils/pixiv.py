@@ -47,7 +47,7 @@ async def get_original_url(illust_id):
 
 
 async def is_r18(illust_id):
-    resp = await request("GET", f"ajax/illust/{illust_id}/pages")
+    resp = await request("GET", f"ajax/illust/{illust_id}")
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
 
 
@@ -56,16 +56,18 @@ class PixivExt:
         self.cache = aiocache.Cache()
 
     async def illust_embed(self, illust_id):
-        url = get_original_url(illust_id)
+        url = await get_original_url(illust_id)
         embed = discord.Embed()
         embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(url)}")
         return embed
 
     async def info_embed(self, illust_id):
         resp = request("GET", f"ajax/illust/{illust_id}")
-        url = get_original_url(illust_id)
-        #tags = [t["translation"]["en"] for t in resp["body"]["tags"]["tags"]]
-        #tag = ", ".join(tags)
+        url = await get_original_url(illust_id)
+        """
+        tags = [t["translation"]["en"] for t in resp["body"]["tags"]["tags"]]
+        tag = ", ".join(tags)
+        """
         embed = discord.Embed(
             title=resp["body"]["illustTitle"],
             description=resp["body"]["userName"],
@@ -84,10 +86,12 @@ class PixivExt:
         embed.add_field(
             name=":eye:", value=resp["body"]["viewCount"], inline=False
         )
+        """
         embed.add_field(
-            name="태그"
-            #value=tag if len(tag) <= 1024 else "표시하기에는 너무 길어요."
+            name="태그",
+            value=tag if len(tag) <= 1024 else "표시하기에는 너무 길어요."
         )
+        """
         embed.set_footer(text=recompile_date(resp["body"]["uploadDate"]))
         return embed
 
