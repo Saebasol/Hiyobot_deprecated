@@ -46,11 +46,6 @@ async def get_original_url(illust_id):
     return url
 
 
-async def get_user_icon(user_id):
-    resp = await request("GET", f"ajax/user/{user_id}")
-    return resp["body"]["image"]
-
-
 async def is_r18(illust_id):
     resp = await request("GET", f"ajax/illust/{illust_id}")
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
@@ -62,15 +57,12 @@ class PixivExt:
 
     async def illust_embed(self, illust_id):
         resp = await request("GET", f"ajax/illust/{illust_id}")
-        user_id = resp["body"]["userId"]
         user_name = resp["body"]["userName"]
-        user_icon = await get_user_icon(user_id)
         url = await get_original_url(illust_id)
-        embed = discord.Embed()
+        embed = discord.Embed(color=0x008AE6)
         embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(url)}")
         embed.set_author(
             name=resp["body"]["illustTitle"],
-            icon_url=user_icon,
             url=f"https://www.pixiv.net/artworks/{illust_id}"
         )
         embed.set_footer(text=f"Illust by {user_name}")
