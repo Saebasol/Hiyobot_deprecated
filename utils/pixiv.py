@@ -80,14 +80,14 @@ async def request(method, endpoint, json=None):
             return response
 
 
-async def get_original_url(illust_id):
-    resp = await request("GET", f"ajax/illust/{illust_id}/pages")
+async def get_original_url(index):
+    resp = await request("GET", f"ajax/illust/{index}/pages")
     url = resp["body"][0]["urls"]["original"]
     return url
 
 
-async def is_r18(illust_id):
-    resp = await request("GET", f"ajax/illust/{illust_id}")
+async def is_r18(index):
+    resp = await request("GET", f"ajax/illust/{index}")
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
 
 
@@ -121,21 +121,21 @@ class PixivExt:
     def __init__(self):
         self.cache = aiocache.Cache()
 
-    async def illust_embed(self, illust_id):
-        resp = await request("GET", f"ajax/illust/{illust_id}")
+    async def illust_embed(self, index):
+        resp = await request("GET", f"ajax/illust/{index}")
         user_name = resp["body"]["userName"]
-        url = await get_original_url(illust_id)
+        url = await get_original_url(index)
         embed = discord.Embed(color=0x008AE6)
         embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(url)}")
         embed.set_author(
             name=resp["body"]["illustTitle"],
-            url=f"https://www.pixiv.net/artworks/{illust_id}"
+            url=f"https://www.pixiv.net/artworks/{index}"
         )
         embed.set_footer(text=f"Illust by {user_name}")
         return embed
 
-    async def info_embed(self, illust_id):
-        info = await get_info(illust_id)
+    async def info_embed(self, index):
+        info = await get_info(index)
         return await make_embed_with_info(info)
 
     async def ranking_embed(self, mode):
