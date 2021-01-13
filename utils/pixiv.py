@@ -6,6 +6,46 @@ import discord
 import re
 
 
+class PixivModel:
+    def __init__(self, bookmark, comment, _id, like, title, username, uploadDate, view):
+        self.bookmark = bookmark
+        self.comment = comment
+        self.id = _id
+        self.like = like
+        self.title = title
+        self.username = username
+        self.uploadDate = uploadDate
+        self.view = view
+
+
+def generator_pixiv_info(list_: list) -> PixivModel:
+    for info in list_:
+        yield PixivModel(
+            info["body"]["bookmarkCount"],
+            info["body"]["illustComment"],
+            info["body"]["id"],
+            info["body"]["likeCount"],
+            info["body"]["title"],
+            info["body"]["userName"],
+            info["body"]["uploadDate"],
+            info["body"]["viewCount"]
+        )
+
+
+async def get_info(index) -> PixivModel:
+    resp = await request("GET", f"ajax/illust/{index}")
+    return PixivModel(
+        resp["body"]["bookmarkCount"],
+        resp["body"]["illustComment"],
+        resp["body"]["id"],
+        resp["body"]["likeCount"],
+        resp["body"]["title"],
+        resp["body"]["userName"],
+        resp["body"]["uploadDate"],
+        resp["body"]["viewCount"]
+    )
+
+
 def shuffle_image_url(url: str):
     url_parse_regex = re.compile(
         r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)")
@@ -51,6 +91,32 @@ async def is_r18(illust_id):
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
 
 
+async def make_embed_with_info(info: PixivModel):
+    illust_url = await get_original_url(info.id)
+    embed = discord.Embed(
+        title=info.title,
+        description=info.username,
+        url=f"https://www.pixiv.net/artworks/{info.id}",
+        color=0x008AE6
+    )
+    embed.set_thumbnail(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
+    embed.add_field(
+        name="설명", value=info.comment, inline=False
+    )
+    embed.add_field(
+        name=":thumbsup:", value=info.like
+    )
+    embed.add_field(
+        name=":heart:", value=info.like
+    )
+    embed.add_field(
+        name=":eye:", value=info.view
+    )
+    embed.set_footer(text=recompile_date(info.uploadDate))
+
+    return embed
+
+
 class PixivExt:
     def __init__(self):
         self.cache = aiocache.Cache()
@@ -69,38 +135,8 @@ class PixivExt:
         return embed
 
     async def info_embed(self, illust_id):
-        resp = await request("GET", f"ajax/illust/{illust_id}")
-        url = await get_original_url(illust_id)
-        """
-        tags = [t["translation"]["en"] for t in resp["body"]["tags"]["tags"]]
-        tag = ", ".join(tags)
-        """
-        embed = discord.Embed(
-            title=resp["body"]["illustTitle"],
-            description=resp["body"]["userName"],
-            url=f"https://www.pixiv.net/artworks/{illust_id}"
-        )
-        embed.set_thumbnail(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(url)}")
-        embed.add_field(
-            name="설명", value=resp["body"]["illustComment"], inline=False
-        )
-        embed.add_field(
-            name=":thumbsup:", value=resp["body"]["likeCount"]
-        )
-        embed.add_field(
-            name=":heart:", value=resp["body"]["bookmarkCount"]
-        )
-        embed.add_field(
-            name=":eye:", value=resp["body"]["viewCount"]
-        )
-        """
-        embed.add_field(
-            name="태그",
-            value=tag if len(tag) <= 1024 else "표시하기에는 너무 길어요."
-        )
-        """
-        embed.set_footer(text=recompile_date(resp["body"]["uploadDate"]))
-        return embed
+        info = await get_info(illust_id)
+        return await make_embed_with_info(info)
 
     async def ranking_embed(self, mode):
         resp = await request("GET", f"ranking.php?format=json&content=illust&mode={mode}")
