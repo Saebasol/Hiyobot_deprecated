@@ -23,6 +23,7 @@ def load_cogs(bot: Bot):
         "nsfw.anekos",
         "nsfw.heliotrope",
         "nsfw.hiyobi",
+        "nsfw.pixiv",
         "task.report",
     ]
 
