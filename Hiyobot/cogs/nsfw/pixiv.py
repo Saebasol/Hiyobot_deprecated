@@ -87,7 +87,7 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        await self.pixiv.cache_ranking_embed(mode)
+        await self.pixiv.cache_ranking_embed(f"{mode}_r18")
         await pagenator(self.bot, ctx, msg, self.pixiv.cache, "pixiv_ranking_embed")
 
 
