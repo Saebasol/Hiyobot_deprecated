@@ -3,6 +3,7 @@ from discord.ext import commands
 
 from utils.pixiv import PixivExt
 from utils.pixiv import is_r18
+from utils.pagenator import pagenator
 
 
 embed_r18 = discord.Embed(title="해당 일러스트는 R-18 인 것 같습니다.\n연령 제한이 설정된 채널에서 사용해주세요.")
@@ -65,7 +66,9 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.pixiv.ranking_embed(f"{mode}")
+        await self.pixiv.cache_ranking_embed(mode)
+        await pagenator(self.bot, ctx, msg, self.pixiv.cache, "pixiv_ranking_embed")
+
 
     @commands.command(name="픽시브랭킹H")
     @commands.is_nsfw()
@@ -84,7 +87,8 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.pixiv.ranking_embed(f"{mode}_r18")
+        await self.pixiv.cache_ranking_embed(mode)
+        await pagenator(self.bot, ctx, msg, self.pixiv.cache, "pixiv_ranking_embed")
 
 
 def setup(bot: commands.Bot):
