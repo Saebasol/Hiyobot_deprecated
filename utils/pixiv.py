@@ -7,30 +7,37 @@ import re
 
 
 class PixivModel:
-    def __init__(self, bookmark, comment, _id, like, title, url, username, uploadDate, view):
+    def __init__(self, bookmark, comment, _id, like, title, username, uploadDate, view):
         self.bookmark = bookmark
         self.comment = comment
         self.id = _id
         self.like = like
         self.title = title
-        self.url = url
         self.username = username
         self.uploadDate = uploadDate
         self.view = view
 
 
-async def generator_pixiv_info(list_: list) -> PixivModel:
+class PixivRankingModel:
+    def __init__(self, _id, rank, title, url, username):
+        self.id = _id
+        self.rank = rank
+        self.title = title
+        self.url = url
+        self.username = username
+
+
+def generator_pixiv_info(list_: list) -> PixivModel:
     for info in list_:
         yield PixivModel(
-            info["body"]["bookmarkCount"],
-            info["body"]["illustComment"],
-            info["body"]["id"],
-            info["body"]["likeCount"],
-            info["body"]["title"],
-            await get_original_url(info["id"]),
-            info["body"]["userName"],
-            info["body"]["uploadDate"],
-            info["body"]["viewCount"]
+            info["bookmarkCount"],
+            info["illustComment"],
+            info["id"],
+            info["likeCount"],
+            info["title"],
+            info["userName"],
+            info["uploadDate"],
+            info["viewCount"]
         )
 
 
@@ -42,11 +49,21 @@ async def get_info(index) -> PixivModel:
         resp["body"]["id"],
         resp["body"]["likeCount"],
         resp["body"]["title"],
-        await get_original_url(index),
         resp["body"]["userName"],
         resp["body"]["uploadDate"],
         resp["body"]["viewCount"]
     )
+
+
+def generator_pixiv_ranking_info(list_: list) -> PixivRankingModel:
+    for info in list_:
+        yield PixivRankingModel(
+            info["illust_id"],
+            info["rank"],
+            info["title"],
+            info["url"],
+            info["user_name"]
+        )
 
 
 def shuffle_image_url(url: str):
@@ -99,9 +116,10 @@ async def is_r18(index):
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
 
 
-def make_illust_embed(info: PixivModel):
+async def make_illust_embed(info: PixivModel):
+    illust_url = await get_original_url(info.id)
     embed = discord.Embed(description=info.id, color=0x008AE6)
-    embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(info.url)}")
+    embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
     embed.set_author(
         name=info.title,
         url=f"https://www.pixiv.net/artworks/{info.id}"
@@ -111,14 +129,27 @@ def make_illust_embed(info: PixivModel):
     return embed
 
 
-def make_info_embed(info: PixivModel):
+async def make_ranking_illust_embed(info: PixivRankingModel):
+    illust_url = await get_original_url(info.id)
+    embed = discord.Embed(description=info.id, color=0x008AE6)
+    embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
+    embed.set_author(
+        name=f"#{info.rank} | {info.title}"
+    )
+    embed.set_footer(text=f"Illust by {info.username}")
+
+    return embed
+
+
+async def make_info_embed(info: PixivModel):
+    illust_url = await get_original_url(info.id)
     embed = discord.Embed(
         title=info.title,
         description=info.username,
         url=f"https://www.pixiv.net/artworks/{info.id}",
         color=0x008AE6
     )
-    embed.set_thumbnail(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(info.url)}")
+    embed.set_thumbnail(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
     embed.add_field(
         name="설명", value=info.comment, inline=False
     )
@@ -142,17 +173,17 @@ class PixivExt:
 
     async def illust_embed(self, index):
         info = await get_info(index)
-        return make_illust_embed(info)
+        return await make_illust_embed(info)
 
     async def info_embed(self, index):
         info = await get_info(index)
-        return make_info_embed(info)
+        return await make_info_embed(info)
 
     async def cache_ranking_embed(self, mode):
         ranking = await get_ranking(mode)
         embed = [
-            make_illust_embed(model)
-            for model in await generator_pixiv_info(ranking["contents"])
+            await make_ranking_illust_embed(model)
+            for model in generator_pixiv_ranking_info(ranking["contents"])
         ]
         await self.cache.set("pixiv_ranking_embed", embed)
 

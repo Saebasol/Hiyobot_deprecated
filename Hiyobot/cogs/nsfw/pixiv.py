@@ -72,7 +72,7 @@ class Pixiv(commands.Cog):
 
     @commands.command(name="픽시브랭킹H")
     @commands.is_nsfw()
-    async def _pixiv_ranking(self, ctx: commands.Context, mode: str = "daily"):
+    async def _pixiv_ranking_r18(self, ctx: commands.Context, mode: str = "daily"):
         """
         픽시브 R-18 랭킹을 가져옵니다.
 
