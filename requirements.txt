@@ -1,5 +1,5 @@
-aiohttp==3.6.3
-discord.py==1.5.1
+aiohttp==3.7.3
+discord.py==1.6.0
 jishaku==1.20.0.220
 psutil==5.8.0
 aiocache==0.11.1
