@@ -116,7 +116,11 @@ async def make_illust_embed(info: PixivModel):
 
 async def make_ranking_illust_embed(info: PixivRankingModel):
     illust_url = await get_original_url(info.id)
-    embed = discord.Embed(description=info.id, color=0x008AE6)
+    embed = discord.Embed(
+        url=f"https://www.pixiv.net/artworks/{info.id}",
+        description=info.id,
+        color=0x008AE6
+    )
     embed.set_image(
         url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
     )
@@ -166,10 +170,9 @@ class PixivExt:
                 ranking["contents"]
             )
         ]
-        done, _ = await asyncio.wait(embed_coroutine_list)
-        embed = [d.result() for d in done]
+        done = await asyncio.gather(*embed_coroutine_list)
 
-        await self.cache.set("pixiv_ranking_embed", embed)
+        await self.cache.set("pixiv_ranking_embed", done)
 
     async def latency(self):
         pixiv_latency1 = time.perf_counter()
