@@ -1,3 +1,4 @@
+import asyncio
 import re
 import time
 
@@ -26,19 +27,16 @@ class PixivRankingModel:
         self.url = url
         self.username = username
 
-
-def generator_pixiv_info(list_: list) -> PixivModel:
-    for info in list_:
-        yield PixivModel(
-            info["bookmarkCount"],
-            info["illustComment"],
-            info["id"],
-            info["likeCount"],
-            info["title"],
-            info["userName"],
-            info["uploadDate"],
-            info["viewCount"],
-        )
+    @classmethod
+    def generator_pixiv_ranking_info(cls, list_: list):
+        for info in list_:
+            yield cls(
+                info["illust_id"],
+                info["rank"],
+                info["title"],
+                info["url"],
+                info["user_name"],
+            )
 
 
 async def get_info(index) -> PixivModel:
@@ -53,17 +51,6 @@ async def get_info(index) -> PixivModel:
         resp["body"]["uploadDate"],
         resp["body"]["viewCount"],
     )
-
-
-def generator_pixiv_ranking_info(list_: list) -> PixivRankingModel:
-    for info in list_:
-        yield PixivRankingModel(
-            info["illust_id"],
-            info["rank"],
-            info["title"],
-            info["url"],
-            info["user_name"],
-        )
 
 
 def shuffle_image_url(url: str):
@@ -173,14 +160,19 @@ class PixivExt:
 
     async def cache_ranking_embed(self, mode):
         ranking = await get_ranking(mode)
-        embed = [
-            await make_ranking_illust_embed(model)
-            for model in generator_pixiv_ranking_info(ranking["contents"])
+        embed_coroutine_list = [
+            make_ranking_illust_embed(model)
+            for model in PixivRankingModel.generator_pixiv_ranking_info(
+                ranking["contents"]
+            )
         ]
-        await self.cache.set("pixiv_ranking_embed", embed)
+        done, _ = await asyncio.wait(embed_coroutine_list)
+        embed = [d.result() for d in done]
+
+        return embed
 
     async def latency(self):
         pixiv_latency1 = time.perf_counter()
-        await request("GET", "/")
+        await request("GET", "/ajax")
         pixiv_latency2 = time.perf_counter()
         return pixiv_latency2 - pixiv_latency1
