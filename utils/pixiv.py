@@ -37,7 +37,7 @@ def generator_pixiv_info(list_: list) -> PixivModel:
             info["title"],
             info["userName"],
             info["uploadDate"],
-            info["viewCount"]
+            info["viewCount"],
         )
 
 
@@ -51,7 +51,7 @@ async def get_info(index) -> PixivModel:
         resp["body"]["title"],
         resp["body"]["userName"],
         resp["body"]["uploadDate"],
-        resp["body"]["viewCount"]
+        resp["body"]["viewCount"],
     )
 
 
@@ -62,13 +62,12 @@ def generator_pixiv_ranking_info(list_: list) -> PixivRankingModel:
             info["rank"],
             info["title"],
             info["url"],
-            info["user_name"]
+            info["user_name"],
         )
 
 
 def shuffle_image_url(url: str):
-    url_parse_regex = re.compile(
-        r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)")
+    url_parse_regex = re.compile(r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)")
 
     parsed_url: list[str] = url_parse_regex.findall(url)[0]
 
@@ -83,12 +82,12 @@ def shuffle_image_url(url: str):
 
 
 def recompile_date(date):
-    regex = re.compile(r'(\d{4})-(\d{2})-(\d{2})')
+    regex = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
     match = regex.search(date)
     year = match.group(1)
     month = match.group(2)
     day = match.group(3)
-    return f'{year}년 {month}월 {day}일'
+    return f"{year}년 {month}월 {day}일"
 
 
 async def request(method, endpoint, json=None):
@@ -119,11 +118,10 @@ async def is_r18(index):
 async def make_illust_embed(info: PixivModel):
     illust_url = await get_original_url(info.id)
     embed = discord.Embed(description=info.id, color=0x008AE6)
-    embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
-    embed.set_author(
-        name=info.title,
-        url=f"https://www.pixiv.net/artworks/{info.id}"
+    embed.set_image(
+        url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
     )
+    embed.set_author(name=info.title, url=f"https://www.pixiv.net/artworks/{info.id}")
     embed.set_footer(text=f"Illust by {info.username}")
 
     return embed
@@ -132,10 +130,10 @@ async def make_illust_embed(info: PixivModel):
 async def make_ranking_illust_embed(info: PixivRankingModel):
     illust_url = await get_original_url(info.id)
     embed = discord.Embed(description=info.id, color=0x008AE6)
-    embed.set_image(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
-    embed.set_author(
-        name=f"#{info.rank} | {info.title}"
+    embed.set_image(
+        url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
     )
+    embed.set_author(name=f"#{info.rank} | {info.title}")
     embed.set_footer(text=f"Illust by {info.username}")
 
     return embed
@@ -147,21 +145,15 @@ async def make_info_embed(info: PixivModel):
         title=info.title,
         description=info.username,
         url=f"https://www.pixiv.net/artworks/{info.id}",
-        color=0x008AE6
+        color=0x008AE6,
     )
-    embed.set_thumbnail(url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}")
-    embed.add_field(
-        name="설명", value=info.comment, inline=False
+    embed.set_thumbnail(
+        url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
     )
-    embed.add_field(
-        name=":thumbsup:", value=info.like
-    )
-    embed.add_field(
-        name=":heart:", value=info.like
-    )
-    embed.add_field(
-        name=":eye:", value=info.view
-    )
+    embed.add_field(name="설명", value=info.comment, inline=False)
+    embed.add_field(name=":thumbsup:", value=info.like)
+    embed.add_field(name=":heart:", value=info.like)
+    embed.add_field(name=":eye:", value=info.view)
     embed.set_footer(text=recompile_date(info.uploadDate))
 
     return embed
