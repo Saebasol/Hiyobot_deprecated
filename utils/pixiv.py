@@ -1,6 +1,6 @@
+import asyncio
 import re
 import time
-import asyncio
 
 import aiocache
 import aiohttp
