@@ -70,26 +70,5 @@ class Pixiv(commands.Cog):
         await pagenator(self.bot, ctx, msg, self.pixiv.cache, "pixiv_ranking_embed")
 
 
-    @commands.command(name="픽시브랭킹H")
-    @commands.is_nsfw()
-    async def _pixiv_ranking_r18(self, ctx: commands.Context, mode: str = "daily"):
-        """
-        픽시브 R-18 랭킹을 가져옵니다.
-
-        사용할 수 있는 값 : 모드(입력하지 않을 경우 일일)
-
-        사용 예시 : ``&픽시브랭킹H`` 또는 ``&픽시브랭킹H 주간/월간``
-        """
-        if mode == "주간":
-            mode = "weekly"
-        elif mode == "월간":
-            mode = "monthly"
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
-        )
-        await self.pixiv.cache_ranking_embed(f"{mode}_r18")
-        await pagenator(self.bot, ctx, msg, self.pixiv.cache, "pixiv_ranking_embed")
-
-
 def setup(bot: commands.Bot):
     bot.add_cog(Pixiv(bot))
