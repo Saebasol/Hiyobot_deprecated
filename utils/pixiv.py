@@ -169,7 +169,7 @@ class PixivExt:
         done, _ = await asyncio.wait(embed_coroutine_list)
         embed = [d.result() for d in done]
 
-        return embed
+        await self.cache.set("pixiv_ranking_embed", embed)
 
     async def latency(self):
         pixiv_latency1 = time.perf_counter()
