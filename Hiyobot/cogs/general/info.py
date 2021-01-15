@@ -11,6 +11,7 @@ from discord.ext import commands
 
 import Hiyobot
 from utils.hiyobi import HiyobiExt
+from utils.pixiv import PixivExt
 from utils.rose_ext import RoseExt
 
 
@@ -20,6 +21,7 @@ class Info(commands.Cog):
         self.proc = psutil.Process()
         self.hiyobi = HiyobiExt()
         self.rose = RoseExt(os.environ["heliotrope_auth"])
+        self.pixiv = PixivExt()
 
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx: commands.Context):
@@ -41,6 +43,11 @@ class Info(commands.Cog):
             heliotrope_latency = round(await self.rose.latency() * 1000, 2)
         except ContentTypeError:
             heliotrope_latency = None
+
+        try:
+            pixiv_latency = round(await self.pixiv.latency() * 1000, 2)
+        except ContentTypeError:
+            pixiv_latency = None
 
         embed = discord.Embed(
             title=f"Info\nCommand prefix: `&`\nHiyobot: `{Hiyobot.__version__}`",
@@ -75,11 +82,11 @@ class Info(commands.Cog):
         embed.add_field(
             name="Average websocket latency",
             value=f"{round(self.bot.latency * 1000, 2)}ms",
-            inline=False,
         )
         embed.add_field(
             name="Average message latency",
             value=f"{round((message_latency2 - message_latency1) * 1000, 2)}ms",
+            inline=False,
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
@@ -88,6 +95,10 @@ class Info(commands.Cog):
         embed.add_field(
             name="Average Heliotrope server latency",
             value=f"{heliotrope_latency if heliotrope_latency else '가져올 수 없음'}ms",
+        )
+        embed.add_field(
+            name="Average Pixiv API server latency",
+            value=f"{pixiv_latency if pixiv_latency else '가져올 수 없음'}ms",
         )
         await ctx.send(embed=embed)
 
