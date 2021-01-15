@@ -1,9 +1,9 @@
+import re
 import time
 
 import aiocache
 import aiohttp
 import discord
-import re
 
 
 class PixivModel:

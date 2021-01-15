@@ -11,8 +11,8 @@ from discord.ext import commands
 
 import Hiyobot
 from utils.hiyobi import HiyobiExt
-from utils.rose_ext import RoseExt
 from utils.pixiv import PixivExt
+from utils.rose_ext import RoseExt
 
 
 class Info(commands.Cog):

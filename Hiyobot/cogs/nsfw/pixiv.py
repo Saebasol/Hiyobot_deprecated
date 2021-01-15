@@ -1,10 +1,8 @@
 import discord
 from discord.ext import commands
 
-from utils.pixiv import PixivExt
-from utils.pixiv import is_r18
 from utils.pagenator import pagenator
-
+from utils.pixiv import PixivExt, is_r18
 
 embed_r18 = discord.Embed(title="해당 일러스트는 R-18 인 것 같습니다.\n연령 제한이 설정된 채널에서 사용해주세요.")
 
