@@ -4,7 +4,7 @@ from discord.ext import commands
 from utils.pagenator import pagenator
 from utils.pixiv import PixivExt, is_r18
 
-embed_r18 = discord.Embed(title="해당 일러스트는 R-18 인 것 같습니다.\n연령 제한이 설정된 채널에서 사용해주세요.")
+embed_r18 = discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
 
 
 class Pixiv(commands.Cog):
@@ -24,9 +24,8 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        if not ctx.channel.nsfw:
-            if await is_r18(index):
-                return await msg.edit(embed=embed_r18)
+        if await is_r18(index):
+            return await msg.edit(embed=embed_r18)
         embed = await self.pixiv.illust_embed(index)
         await msg.edit(embed=embed)
 
@@ -42,9 +41,8 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        if not ctx.channel.nsfw:
-            if await is_r18(index):
-                return await msg.edit(embed=embed_r18)
+        if await is_r18(index):
+            return await msg.edit(embed=embed_r18)
         embed = await self.pixiv.info_embed(index)
         await msg.edit(embed=embed)
 
