@@ -1,7 +1,6 @@
 import asyncio
 import re
 import time
-import datetime
 
 import aiocache
 import aiohttp
@@ -70,8 +69,12 @@ def shuffle_image_url(url: str):
 
 
 def recompile_date(date):
-    return datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y년 %m월 %d일")
-
+    regex = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+    match = regex.search(date)
+    year = match.group(1)
+    month = match.group(2)
+    day = match.group(3)
+    return f"{year}년 {month}월 {day}일"
 
 async def request(method, endpoint, json=None):
     url = "https://www.pixiv.net/" + endpoint
