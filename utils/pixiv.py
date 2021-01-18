@@ -8,11 +8,12 @@ import discord
 
 
 class PixivModel:
-    def __init__(self, bookmark, comment, _id, like, title, username, uploadDate, view):
+    def __init__(self, bookmark, comment, _id, like, bookmark, title, username, uploadDate, view):
         self.bookmark = bookmark
         self.comment = comment
         self.id = _id
         self.like = like
+        self.bookmark = bookmark
         self.title = title
         self.username = username
         self.uploadDate = uploadDate
@@ -46,6 +47,7 @@ async def get_info(index) -> PixivModel:
         resp["body"]["illustComment"],
         resp["body"]["id"],
         resp["body"]["likeCount"],
+        resp["body"]["bookMarkCount"],
         resp["body"]["title"],
         resp["body"]["userName"],
         resp["body"]["uploadDate"],
