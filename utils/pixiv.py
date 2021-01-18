@@ -119,7 +119,7 @@ async def make_ranking_illust_embed(info: PixivRankingModel):
     embed = discord.Embed(
         url=f"https://www.pixiv.net/artworks/{info.id}",
         description=info.id,
-        color=0x008AE6
+        color=0x008AE6,
     )
     embed.set_image(
         url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
