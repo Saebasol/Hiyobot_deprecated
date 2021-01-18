@@ -70,7 +70,10 @@ def shuffle_image_url(url: str):
 
 
 def recompile_date(date):
-    return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y년 %m월 %d일")
+    return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime(
+        "%Y년 %m월 %d일"
+    )
+
 
 async def request(method, endpoint, json=None):
     url = "https://www.pixiv.net/" + endpoint
@@ -137,7 +140,9 @@ async def make_info_embed(info: PixivModel):
     )
     embed.add_field(name="설명", value=info.comment, inline=True)
     embed.add_field(name="작가", value=info.username, inline=True)
-    embed.set_footer(text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {recompile_date(info.uploadDate)}")
+    embed.set_footer(
+        text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {recompile_date(info.uploadDate)}"
+    )
 
     return embed
 
