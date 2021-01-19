@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from utils.pagenator import pagenator
-from utils.pixiv import PixivExt, is_r18, is_noResult
+from utils.pixiv import PixivExt, is_noResult, is_r18
 
 embed_r18 = discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
 
