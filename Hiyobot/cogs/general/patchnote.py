@@ -20,7 +20,7 @@ class PatchNote(commands.Cog):
         headers = {"Accept": "application/vnd.github.v3+json"}
         async with aiohttp.ClientSession() as cs:
             async with cs.get(
-                f"https://api.github.com/repos/SaidBySolo/Hiyobot/releases/tags/{Hiyobot.__version__}",
+                f"https://api.github.com/repos/Saebasol/Hiyobot/releases/tags/{Hiyobot.__version__}",
                 headers=headers,
             ) as r:
                 if r.status == 404:
