@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import re
 import time
 
@@ -69,12 +70,9 @@ def shuffle_image_url(url: str):
 
 
 def recompile_date(date):
-    regex = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
-    match = regex.search(date)
-    year = match.group(1)
-    month = match.group(2)
-    day = match.group(3)
-    return f"{year}년 {month}월 {day}일"
+    return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime(
+        "%Y년 %m월 %d일"
+    )
 
 
 async def request(method, endpoint, json=None):
@@ -116,7 +114,11 @@ async def make_illust_embed(info: PixivModel):
 
 async def make_ranking_illust_embed(info: PixivRankingModel):
     illust_url = await get_original_url(info.id)
-    embed = discord.Embed(description=info.id, color=0x008AE6)
+    embed = discord.Embed(
+        url=f"https://www.pixiv.net/artworks/{info.id}",
+        description=info.id,
+        color=0x008AE6,
+    )
     embed.set_image(
         url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
     )
@@ -130,18 +132,17 @@ async def make_info_embed(info: PixivModel):
     illust_url = await get_original_url(info.id)
     embed = discord.Embed(
         title=info.title,
-        description=info.username,
         url=f"https://www.pixiv.net/artworks/{info.id}",
         color=0x008AE6,
     )
-    embed.set_thumbnail(
+    embed.set_image(
         url=f"https://doujinshiman.ga/v3/api/proxy/{shuffle_image_url(illust_url)}"
     )
-    embed.add_field(name="설명", value=info.comment, inline=False)
-    embed.add_field(name=":thumbsup:", value=info.like)
-    embed.add_field(name=":heart:", value=info.like)
-    embed.add_field(name=":eye:", value=info.view)
-    embed.set_footer(text=recompile_date(info.uploadDate))
+    embed.add_field(name="설명", value=info.comment, inline=True)
+    embed.add_field(name="작가", value=info.username, inline=True)
+    embed.set_footer(
+        text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {recompile_date(info.uploadDate)}"
+    )
 
     return embed
 
@@ -166,10 +167,9 @@ class PixivExt:
                 ranking["contents"]
             )
         ]
-        done, _ = await asyncio.wait(embed_coroutine_list)
-        embed = [d.result() for d in done]
+        done = await asyncio.gather(*embed_coroutine_list)
 
-        await self.cache.set("pixiv_ranking_embed", embed)
+        await self.cache.set("pixiv_ranking_embed", done)
 
     async def latency(self):
         pixiv_latency1 = time.perf_counter()
