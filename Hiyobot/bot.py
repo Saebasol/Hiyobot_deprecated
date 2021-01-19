@@ -26,7 +26,6 @@ def load_cogs(bot: Bot):
         "nsfw.heliotrope",
         "nsfw.hiyobi",
         "nsfw.pixiv",
-        "task.report",
     ]
 
     failed_list = []
