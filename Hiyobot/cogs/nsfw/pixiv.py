@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 from utils.pagenator import pagenator
-from utils.pixiv import PixivExt, is_r18
+from utils.pixiv import PixivExt, is_noResult, is_r18
 
 embed_r18 = discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
 
@@ -21,6 +21,8 @@ class Pixiv(commands.Cog):
 
         사용 예시 : ``&픽시브 86094006``
         """
+        if is_noResult(index):
+            return await ctx.send("결과가 없습니다. 정확히 입력했는지 확인해주세요.")
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
@@ -38,6 +40,8 @@ class Pixiv(commands.Cog):
 
         사용 예시 : ``&픽시브정보 86094006``
         """
+        if is_noResult(index):
+            return await ctx.send("결과가 없습니다. 정확히 입력했는지 확인해주세요.")
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
@@ -59,6 +63,8 @@ class Pixiv(commands.Cog):
             mode = "weekly"
         elif mode == "월간":
             mode = "monthly"
+        else:
+            return await ctx.send("잘못된 값입니다. ``&도움말``을 입력해서 확인해주세요.")
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
