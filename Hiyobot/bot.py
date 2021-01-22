@@ -56,5 +56,5 @@ class Bot(Bot):
         self.verify = os.environ.get("VERIFY")
 
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 bot = Bot(command_prefix="&", intents=intents)

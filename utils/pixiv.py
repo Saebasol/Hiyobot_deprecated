@@ -100,6 +100,11 @@ async def is_r18(index):
     return True if resp["body"]["tags"]["tags"][0]["tag"] == "R-18" else False
 
 
+async def is_noResult(index):
+    resp = await request("GET", f"ajax/illust/{index}")
+    return True if resp["error"] else False
+
+
 async def make_illust_embed(info: PixivModel):
     illust_url = await get_original_url(info.id)
     embed = discord.Embed(description=info.id, color=0x008AE6)
