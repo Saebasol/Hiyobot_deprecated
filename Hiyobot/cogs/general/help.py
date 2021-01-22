@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 
@@ -34,5 +35,5 @@ class Help(commands.Cog):
         await pagenator(self.bot, ctx, msg, embed_list)
 
 
-def setup(bot: commands.Bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Help(bot))

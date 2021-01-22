@@ -41,27 +41,29 @@ class PixivRankingModel:
 
 class PixivRequester:
     @staticmethod
-    async def request(method, endpoint, json=None):
-        url = "https://www.pixiv.net/" + endpoint
+    async def request(method, endpoint, **kwargs):
+        url = "https://www.pixiv.net" + endpoint
         async with aiohttp.ClientSession() as cs:
-            async with cs.request(method, url, json=json) as r:
-                if r.status == 404:
+            async with cs.request(method, url, **kwargs) as r:
+                if r.status != 200:
                     return None
                 response = await r.json(content_type=None)
                 return response
 
-    async def get_ranking(self, mode):
+    async def get_ranking(self, mode: str):
         return await self.request(
-            "GET", f"ranking.php?format=json&content=illust&mode={mode}"
+            "GET",
+            f"/ranking.php",
+            params={"format": "json", "content": "illust", "mode": mode},
         )
 
-    async def get_original_url(self, index):
-        resp = await self.request("GET", f"ajax/illust/{index}/pages")
+    async def get_original_url(self, index: int):
+        resp = await self.request("GET", f"/ajax/illust/{index}/pages")
         url = resp["body"][0]["urls"]["original"]
         return url
 
-    async def get_info(self, index):
-        resp = await self.request("GET", f"ajax/illust/{index}")
+    async def get_info(self, index: int):
+        resp = await self.request("GET", f"/ajax/illust/{index}")
         if resp["error"]:
             return discord.Embed(title="결과가 없습니다. 정확히 입력했는지 확인해주세요.")
         elif resp["body"]["tags"]["tags"][0]["tag"] == "R-18":
@@ -80,28 +82,20 @@ class PixivRequester:
 
 
 class PixivExt(PixivRequester):
-    def __init__(self) -> None:
-        super().__init__()
-
     @staticmethod
     def shuffle_image_url(url: str):
-        url_parse_regex = re.compile(
-            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
+        parsed_url = re.search(
+            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)", url
         )
+        prefix = parsed_url.group(0)
+        main_url = parsed_url.group(1).replace(".", "_")
+        _type = parsed_url.group(2)
+        image = parsed_url.group(3).replace("/", "_")
 
-        parsed_url: list[str] = url_parse_regex.findall(url)[0]
-
-        prefix = parsed_url[0]
-        main_url = parsed_url[1].replace(".", "_")
-        type_ = parsed_url[2]
-        image = parsed_url[3].replace("/", "_")
-
-        main = f"{prefix}_{type_}{main_url}_{image}"
-
-        return main
+        return f"{prefix}_{_type}{main_url}_{image}"
 
     @staticmethod
-    def recompile_date(date):
+    def recompile_date(date: str):
         return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime(
             "%Y년 %m월 %d일"
         )
@@ -155,11 +149,11 @@ class PixivExt(PixivRequester):
     async def handle(self, resp, type):
         if isinstance(resp, discord.Embed):
             return resp
-        else:
-            if type == "illust":
-                return await self.make_illust_embed(resp)
-            elif type == "info":
-                return await self.make_info_embed(resp)
+
+        if type == "illust":
+            return await self.make_illust_embed(resp)
+        elif type == "info":
+            return await self.make_info_embed(resp)
 
     async def illust_embed(self, index):
         info = await self.get_info(index)
@@ -171,17 +165,21 @@ class PixivExt(PixivRequester):
 
     async def ranking_embed(self, mode):
         ranking = await self.get_ranking(mode)
-        embed_coroutine_list = [
-            self.make_ranking_illust_embed(model)
-            for model in PixivRankingModel.generator_pixiv_ranking_info(
-                ranking["contents"]
+        rank_embed = list(
+            await asyncio.gather(
+                *list(
+                    map(
+                        self.make_ranking_illust_embed,
+                        PixivRankingModel.generator_pixiv_ranking_info(
+                            ranking["contents"]
+                        ),
+                    )
+                )
             )
-        ]
-        rank_embed = list(await asyncio.gather(*embed_coroutine_list))
+        )
         return rank_embed
 
     async def latency(self):
-        pixiv_latency1 = time.perf_counter()
+        pixiv_latency = time.perf_counter()
         await self.request("GET", "/ajax")
-        pixiv_latency2 = time.perf_counter()
-        return pixiv_latency2 - pixiv_latency1
+        return time.perf_counter() - pixiv_latency

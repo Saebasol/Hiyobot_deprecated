@@ -25,9 +25,9 @@ class Info(commands.Cog):
 
         사용 예시 : ``&정보``
         """
-        message_latency1 = time.perf_counter()
+        message_latency = time.perf_counter()
         await ctx.trigger_typing()
-        message_latency2 = time.perf_counter()
+        latency = round((time.perf_counter() - message_latency) * 1000, 2)
 
         try:
             hiyobi_latency = round(await self.bot.hiyobi.latency() * 1000, 2)
@@ -73,14 +73,13 @@ class Info(commands.Cog):
             embed.add_field(name="Process name", value=f"{name}")
             embed.add_field(name="Thread(s)", value=f"{thread_count}")
         embed.add_field(name="Guild(s)", value=f"{len(self.bot.guilds)}")
-        embed.add_field(name="User(s)", value=f"{len(self.bot.users)}")
         embed.add_field(
             name="Average websocket latency",
             value=f"{round(self.bot.latency * 1000, 2)}ms",
         )
         embed.add_field(
             name="Average message latency",
-            value=f"{round((message_latency2 - message_latency1) * 1000, 2)}ms",
+            value=f"{latency}ms",
             inline=False,
         )
         embed.add_field(
@@ -98,5 +97,5 @@ class Info(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot: class_hiyobot):
     bot.add_cog(Info(bot))
