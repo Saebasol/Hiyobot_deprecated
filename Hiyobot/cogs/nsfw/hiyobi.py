@@ -1,32 +1,13 @@
 import discord
 from discord.ext import commands
 
-from utils.hiyobi import HiyobiExt
+from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 
 class Hiyobi(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
-        self.hiyobi = HiyobiExt()
-
-    @commands.command(name="히요비리스트")
-    @commands.is_nsfw()
-    async def _hiyobi_list(self, ctx: commands.Context, num: int = 1):
-        """
-        히요비에서 최근 올라온 작품을 가져옵니다.
-
-        사용할 수 있는 값 : 페이지(입력하지 않을 경우 1)
-
-        사용 예시 : ``&히요비리스트`` 또는 ``&히요비리스트 2``
-        """
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
-        )
-        not_found = await self.hiyobi.cache_list_embed(num)
-        if not_found:
-            await msg.edit(embed=not_found)
-        await pagenator(self.bot, ctx, msg, self.hiyobi.cache, "hiyobi_list_embed")
 
     @commands.command(name="히요비번호")
     @commands.is_nsfw()
@@ -41,8 +22,28 @@ class Hiyobi(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.hiyobi.info_embed(index)
+        embed = await self.bot.hiyobi.info_embed(index)
         await msg.edit(embed=embed)
+
+    @commands.command(name="히요비리스트")
+    @commands.is_nsfw()
+    async def _hiyobi_list(self, ctx: commands.Context, num: int = 1):
+        """
+        히요비에서 최근 올라온 작품을 가져옵니다.
+
+        사용할 수 있는 값 : 페이지(입력하지 않을 경우 1)
+
+        사용 예시 : ``&히요비리스트`` 또는 ``&히요비리스트 2``
+        """
+        msg: discord.Message = await ctx.send(
+            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
+        )
+        embed_list = await self.bot.hiyobi.list_embed(num)
+
+        if embed_list:
+            return await pagenator(self.bot, ctx, msg, embed_list)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command(name="히요비검색")
     @commands.is_nsfw()
@@ -58,11 +59,13 @@ class Hiyobi(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        not_found = await self.hiyobi.cache_search_embed(search)
-        if not_found:
-            await msg.edit(embed=not_found)
-        await pagenator(self.bot, ctx, msg, self.hiyobi.cache, "hiyobi_search_embed")
+        embed_list = await self.bot.hiyobi.search_embed(search)
+
+        if embed_list:
+            return await pagenator(self.bot, ctx, msg, embed_list)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
 
-def setup(bot: commands.Bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Hiyobi(bot))
