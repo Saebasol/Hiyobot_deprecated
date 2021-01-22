@@ -4,6 +4,10 @@ import os
 import discord
 from discord.ext.commands import Bot
 
+from utils.hiyobi import HiyobiExt
+from utils.pixiv import PixivExt
+from utils.rose_ext import RoseExt
+
 logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
@@ -11,6 +15,7 @@ handler.setFormatter(
     logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
 )
 logger.addHandler(handler)
+
 
 class Hiyobot(Bot):
     def __init__(
@@ -24,6 +29,9 @@ class Hiyobot(Bot):
         )
         self.github_token = os.environ.get("GitHub")
         self.verify = os.environ.get("VERIFY")
+        self.hiyobi = HiyobiExt()
+        self.rose = RoseExt(os.environ.get("heliotrope_auth"))
+        self.pixiv = PixivExt()
 
 
 def load_cogs(bot: Hiyobot):
@@ -53,6 +61,7 @@ def load_cogs(bot: Hiyobot):
             failed_list.append(extension)
 
     return failed_list
+
 
 intents = discord.Intents.default()
 bot = Hiyobot(command_prefix="&", intents=intents)

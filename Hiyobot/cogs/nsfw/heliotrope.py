@@ -1,16 +1,15 @@
+from Hiyobot.bot import Hiyobot
 import os
 
 import discord
 from discord.ext import commands
 
 from utils.pagenator import pagenator
-from utils.rose_ext import RoseExt
 
 
 class Heliotrope(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
-        self.rose = RoseExt(os.environ.get("heliotrope_auth"))
 
     @commands.command(name="번호")
     @commands.is_nsfw()
@@ -26,7 +25,7 @@ class Heliotrope(commands.Cog):
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
 
-        embed = await self.rose.info_embed(index)
+        embed = await self.bot.rose.info_embed(index)
         if embed:
             return await msg.edit(embed=embed)
 
@@ -43,7 +42,7 @@ class Heliotrope(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.rose.random_embed()
+        embed = await self.bot.rose.random_embed()
         await msg.edit(embed=embed)
 
     @commands.command(name="리스트")
@@ -59,7 +58,7 @@ class Heliotrope(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요")
         )
-        embed = await self.rose.list_embed(num)
+        embed = await self.bot.rose.list_embed(num)
 
         if embed:
             return await pagenator(self.bot, ctx, msg, embed)
@@ -79,12 +78,12 @@ class Heliotrope(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.rose.viewer_embed(index)
+        embed = await self.bot.rose.viewer_embed(index)
         if embed:
             await pagenator(self.bot, ctx, msg, embed)
 
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
 
-def setup(bot: commands.Bot):
+def setup(bot):
     bot.add_cog(Heliotrope(bot))
