@@ -10,18 +10,13 @@ from aiohttp.client_exceptions import ContentTypeError
 from discord.ext import commands
 
 import Hiyobot
-from utils.hiyobi import HiyobiExt
-from utils.pixiv import PixivExt
-from utils.rose_ext import RoseExt
+from Hiyobot.bot import Hiyobot as class_hiyobot
 
 
 class Info(commands.Cog):
-    def __init__(self, bot):
-        self.bot: commands.Bot = bot
+    def __init__(self, bot: class_hiyobot):
+        self.bot = bot
         self.proc = psutil.Process()
-        self.hiyobi = HiyobiExt()
-        self.rose = RoseExt(os.environ["heliotrope_auth"])
-        self.pixiv = PixivExt()
 
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx: commands.Context):
@@ -35,17 +30,17 @@ class Info(commands.Cog):
         message_latency2 = time.perf_counter()
 
         try:
-            hiyobi_latency = round(await self.hiyobi.latency() * 1000, 2)
+            hiyobi_latency = round(await self.bot.hiyobi.latency() * 1000, 2)
         except JSONDecodeError:
             hiyobi_latency = None
 
         try:
-            heliotrope_latency = round(await self.rose.latency() * 1000, 2)
+            heliotrope_latency = round(await self.bot.rose.latency() * 1000, 2)
         except ContentTypeError:
             heliotrope_latency = None
 
         try:
-            pixiv_latency = round(await self.pixiv.latency() * 1000, 2)
+            pixiv_latency = round(await self.bot.pixiv.latency() * 1000, 2)
         except ContentTypeError:
             pixiv_latency = None
 

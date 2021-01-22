@@ -1,16 +1,15 @@
+from Hiyobot.bot import Hiyobot
 import discord
 from discord.ext import commands
 
 from utils.pagenator import pagenator
-from utils.pixiv import PixivExt
 
 embed_r18 = discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
 
 
 class Pixiv(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
-        self.pixiv = PixivExt()
 
     @commands.command(name="픽시브")
     async def _pixiv_view(self, ctx: commands.Context, index: int):
@@ -24,7 +23,7 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.pixiv.illust_embed(index)
+        embed = await self.bot.pixiv.illust_embed(index)
         await msg.edit(embed=embed)
 
     @commands.command(name="픽시브정보")
@@ -39,7 +38,7 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.pixiv.info_embed(index)
+        embed = await self.bot.pixiv.info_embed(index)
         await msg.edit(embed=embed)
 
     @commands.command(name="픽시브랭킹")
@@ -58,11 +57,11 @@ class Pixiv(commands.Cog):
         )
 
         if mode := mode_dict.get(mode):
-            rank_embed = await self.pixiv.ranking_embed(mode)
+            rank_embed = await self.bot.pixiv.ranking_embed(mode)
             await pagenator(self.bot, ctx, msg, rank_embed)
         else:
             return await ctx.send("잘못된 값입니다. ``&도움말``을 입력해서 확인해주세요.")
 
 
-def setup(bot: commands.Bot):
+def setup(bot):
     bot.add_cog(Pixiv(bot))
