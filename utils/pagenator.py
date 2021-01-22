@@ -1,18 +1,21 @@
 import asyncio
+from contextlib import suppress
 
 import discord
-from discord.ext import commands
+from discord.embeds import Embed
+from discord.ext.commands.context import Context
+from discord.message import Message
+
+from Hiyobot.bot import Hiyobot
 
 
 async def pagenator(
-    bot: commands.Bot,
-    ctx: commands.Context,
-    msg: discord.Message,
-    cache_class,
-    list_name,
+    bot: Hiyobot,
+    ctx: Context,
+    msg: Message,
+    embed_list: list[Embed],
 ):
     num = 0
-    embed_list = await cache_class.get(list_name)
 
     total = len(embed_list)
 
@@ -25,10 +28,8 @@ async def pagenator(
     await msg.add_reaction("▶")
 
     async def pass_permission_error(msg: discord.Message, emoji, author):
-        try:
+        with suppress(Exception):
             await msg.remove_reaction(emoji, author)
-        except:
-            pass
 
     while True:
         try:
@@ -39,13 +40,11 @@ async def pagenator(
                 continue
 
         except asyncio.TimeoutError:
-            await cache_class.clear()
             await msg.clear_reactions()
             return
 
         else:
             if reaction.emoji == "❎":
-                await cache_class.clear()
                 await msg.clear_reactions()
                 return
 
