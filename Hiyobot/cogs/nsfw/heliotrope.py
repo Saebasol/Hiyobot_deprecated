@@ -1,34 +1,13 @@
-import os
-
 import discord
 from discord.ext import commands
 
+from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
-from utils.rose_ext import RoseExt
 
 
 class Heliotrope(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
-        self.rose = RoseExt(os.environ["heliotrope_auth"])
-
-    @commands.command(name="리스트")
-    @commands.is_nsfw()
-    async def _list(self, ctx: commands.Context, num: int = 1):
-        """
-        히토미에서 최근 올라온 한국어 작품을 가져옵니다.
-
-        사용할 수 있는 값 : 페이지(입력하지 않을 경우 1)
-
-        사용 예시 : ``&리스트`` 또는 ``&리스트 2``
-        """
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요")
-        )
-        not_found = await self.rose.cache_list_embed(num)
-        if not_found:
-            await msg.edit(embed=not_found)
-        await pagenator(self.bot, ctx, msg, self.rose.cache, "list_embed")
 
     @commands.command(name="번호")
     @commands.is_nsfw()
@@ -43,8 +22,12 @@ class Heliotrope(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.rose.info_embed(index)
-        await msg.edit(embed=embed)
+
+        embed = await self.bot.rose.info_embed(index)
+        if embed:
+            return await msg.edit(embed=embed)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command(name="랜덤")
     @commands.is_nsfw()
@@ -57,8 +40,28 @@ class Heliotrope(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.rose.random_embed()
+        embed = await self.bot.rose.random_embed()
         await msg.edit(embed=embed)
+
+    @commands.command(name="리스트")
+    @commands.is_nsfw()
+    async def _list(self, ctx: commands.Context, num: int = 1):
+        """
+        히토미에서 최근 올라온 한국어 작품을 가져옵니다.
+
+        사용할 수 있는 값 : 페이지(입력하지 않을 경우 1)
+
+        사용 예시 : ``&리스트`` 또는 ``&리스트 2``
+        """
+        msg: discord.Message = await ctx.send(
+            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요")
+        )
+        embed = await self.bot.rose.list_embed(num)
+
+        if embed:
+            return await pagenator(self.bot, ctx, msg, embed)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command(name="뷰어")
     @commands.is_nsfw()
@@ -73,11 +76,12 @@ class Heliotrope(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        not_found = await self.rose.cache_viewer_embed(index)
-        if not_found:
-            await msg.edit(embed=not_found)
-        await pagenator(self.bot, ctx, msg, self.rose.cache, "viewer_embed")
+        embed = await self.bot.rose.viewer_embed(index)
+        if embed:
+            await pagenator(self.bot, ctx, msg, embed)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
 
-def setup(bot: commands.Bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Heliotrope(bot))

@@ -10,18 +10,13 @@ from aiohttp.client_exceptions import ContentTypeError
 from discord.ext import commands
 
 import Hiyobot
-from utils.hiyobi import HiyobiExt
-from utils.pixiv import PixivExt
-from utils.rose_ext import RoseExt
+from Hiyobot.bot import Hiyobot as class_hiyobot
 
 
 class Info(commands.Cog):
-    def __init__(self, bot):
-        self.bot: commands.Bot = bot
+    def __init__(self, bot: class_hiyobot):
+        self.bot = bot
         self.proc = psutil.Process()
-        self.hiyobi = HiyobiExt()
-        self.rose = RoseExt(os.environ["heliotrope_auth"])
-        self.pixiv = PixivExt()
 
     @commands.command(name="정보", aliases=["info"])
     async def _botinfo(self, ctx: commands.Context):
@@ -30,22 +25,22 @@ class Info(commands.Cog):
 
         사용 예시 : ``&정보``
         """
-        message_latency1 = time.perf_counter()
+        message_latency = time.perf_counter()
         await ctx.trigger_typing()
-        message_latency2 = time.perf_counter()
+        latency = round((time.perf_counter() - message_latency) * 1000, 2)
 
         try:
-            hiyobi_latency = round(await self.hiyobi.latency() * 1000, 2)
+            hiyobi_latency = round(await self.bot.hiyobi.latency() * 1000, 2)
         except JSONDecodeError:
             hiyobi_latency = None
 
         try:
-            heliotrope_latency = round(await self.rose.latency() * 1000, 2)
+            heliotrope_latency = round(await self.bot.rose.latency() * 1000, 2)
         except ContentTypeError:
             heliotrope_latency = None
 
         try:
-            pixiv_latency = round(await self.pixiv.latency() * 1000, 2)
+            pixiv_latency = round(await self.bot.pixiv.latency() * 1000, 2)
         except ContentTypeError:
             pixiv_latency = None
 
@@ -78,14 +73,13 @@ class Info(commands.Cog):
             embed.add_field(name="Process name", value=f"{name}")
             embed.add_field(name="Thread(s)", value=f"{thread_count}")
         embed.add_field(name="Guild(s)", value=f"{len(self.bot.guilds)}")
-        embed.add_field(name="User(s)", value=f"{len(self.bot.users)}")
         embed.add_field(
             name="Average websocket latency",
             value=f"{round(self.bot.latency * 1000, 2)}ms",
         )
         embed.add_field(
             name="Average message latency",
-            value=f"{round((message_latency2 - message_latency1) * 1000, 2)}ms",
+            value=f"{latency}ms",
             inline=False,
         )
         embed.add_field(
@@ -103,5 +97,5 @@ class Info(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot: class_hiyobot):
     bot.add_cog(Info(bot))

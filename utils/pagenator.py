@@ -1,18 +1,21 @@
 import asyncio
+from contextlib import suppress
 
 import discord
-from discord.ext import commands
+from discord.embeds import Embed
+from discord.ext.commands.context import Context
+from discord.message import Message
+
+from Hiyobot.bot import Hiyobot
 
 
 async def pagenator(
-    bot: commands.Bot,
-    ctx: commands.Context,
-    msg: discord.Message,
-    cache_class,
-    list_name,
+    bot: Hiyobot,
+    ctx: Context,
+    msg: Message,
+    embed_list: list[Embed],
 ):
     num = 0
-    embed_list = await cache_class.get(list_name)
 
     total = len(embed_list)
 
@@ -25,12 +28,10 @@ async def pagenator(
     await msg.add_reaction("▶")
 
     async def pass_permission_error(msg: discord.Message, emoji, author):
-        try:
+        with suppress(Exception):
             await msg.remove_reaction(emoji, author)
-        except:
-            pass
 
-    while True:
+    while not bot.is_closed():
         try:
             reaction, user = await bot.wait_for(
                 event="reaction_add", check=check, timeout=80.0
@@ -39,29 +40,25 @@ async def pagenator(
                 continue
 
         except asyncio.TimeoutError:
-            await cache_class.clear()
+            return await msg.clear_reactions()
+
+        if reaction.emoji == "❎":
             await msg.clear_reactions()
             return
 
-        else:
-            if reaction.emoji == "❎":
-                await cache_class.clear()
-                await msg.clear_reactions()
-                return
+        elif reaction.emoji == "▶":
+            num += 1
 
-            elif reaction.emoji == "▶":
-                num += 1
+            if num > total - 1:
+                num = 0
 
-                if num > total - 1:
-                    num = 0
+            await msg.edit(embed=embed_list[num])
+            await pass_permission_error(msg, "▶", ctx.author)
 
-                await msg.edit(embed=embed_list[num])
-                await pass_permission_error(msg, "▶", ctx.author)
+        elif reaction.emoji == "◀":
+            num -= 1
+            if num < 0:
+                num = total - 1
 
-            elif reaction.emoji == "◀":
-                num -= 1
-                if num < 0:
-                    num = total - 1
-
-                await msg.edit(embed=embed_list[num])
-                await pass_permission_error(msg, "◀", ctx.author)
+            await msg.edit(embed=embed_list[num])
+            await pass_permission_error(msg, "◀", ctx.author)
