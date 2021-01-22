@@ -1,9 +1,10 @@
-from Hiyobot.bot import Hiyobot
 import random
 
 import anekos
 import discord
 from discord.ext import commands
+
+from Hiyobot.bot import Hiyobot
 
 
 class Nekos(commands.Cog):
