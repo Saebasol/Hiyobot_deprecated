@@ -1,5 +1,6 @@
-from Hiyobot.bot import Hiyobot
 from discord.ext import commands
+
+from Hiyobot.bot import Hiyobot
 
 
 class Error(commands.Cog):
