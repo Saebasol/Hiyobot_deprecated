@@ -12,8 +12,21 @@ handler.setFormatter(
 )
 logger.addHandler(handler)
 
+class Hiyobot(Bot):
+    def __init__(
+        self, command_prefix, help_command=None, description=None, **options
+    ) -> None:
+        super().__init__(
+            command_prefix,
+            help_command=help_command,
+            description=description,
+            **options
+        )
+        self.github_token = os.environ.get("GitHub")
+        self.verify = os.environ.get("VERIFY")
 
-def load_cogs(bot: Bot):
+
+def load_cogs(bot: Hiyobot):
     extensions = [
         "jishaku",
         "events.error",
@@ -41,20 +54,5 @@ def load_cogs(bot: Bot):
 
     return failed_list
 
-
-class Bot(Bot):
-    def __init__(
-        self, command_prefix, help_command=None, description=None, **options
-    ) -> None:
-        super().__init__(
-            command_prefix,
-            help_command=help_command,
-            description=description,
-            **options
-        )
-        self.github_token = os.environ.get("GitHub")
-        self.verify = os.environ.get("VERIFY")
-
-
 intents = discord.Intents.default()
-bot = Bot(command_prefix="&", intents=intents)
+bot = Hiyobot(command_prefix="&", intents=intents)
