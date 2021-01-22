@@ -5,11 +5,11 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-from Hiyobot.bot import Bot
+from Hiyobot.bot import Hiyobot
 
 
 class Auth(commands.Cog):
-    def __init__(self, bot: Bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
 
     @commands.command(name="api")
@@ -132,5 +132,5 @@ Request to use API, so please approve it.
                     )
 
 
-def setup(bot: commands.Bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Auth(bot))

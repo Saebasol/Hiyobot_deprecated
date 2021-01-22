@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 
 import Hiyobot
+from Hiyobot.bot import Hiyobot as class_hiyobot
 
 
 class PatchNote(commands.Cog):
@@ -37,5 +38,5 @@ class PatchNote(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: commands.Bot):
+def setup(bot: class_hiyobot):
     bot.add_cog(PatchNote(bot))
