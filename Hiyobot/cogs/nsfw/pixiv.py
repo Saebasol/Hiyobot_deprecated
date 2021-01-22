@@ -1,7 +1,7 @@
-from Hiyobot.bot import Hiyobot
 import discord
 from discord.ext import commands
 
+from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 embed_r18 = discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
