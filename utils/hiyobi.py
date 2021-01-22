@@ -30,20 +30,20 @@ class HiyobiTagsModel:
 
 class HiyobiRequester:
     @staticmethod
-    async def request(method, endpoint, json=None):
+    async def request(method: str, endpoint: str, **kwargs):
         url = "https://api.hiyobi.me" + endpoint
         async with aiohttp.ClientSession() as cs:
-            async with cs.request(method, url, json=json) as r:
-                if r.status == 404:
+            async with cs.request(method, url, **kwargs) as r:
+                if r.status != 200:
                     return None
                 response = await r.json(content_type=None)
-            return response
+                return response
 
-    async def get_list(self, num):
+    async def get_list(self, num: int):
         response = await self.request("GET", f"/list/{num}")
         return response
 
-    async def get_info(self, index) -> HiyobiTagsModel:
+    async def get_info(self, index: int) -> HiyobiTagsModel:
         response = await self.request("GET", f"/gallery/{index}")
         return HiyobiTagsModel(
             response["artists"],
@@ -55,21 +55,18 @@ class HiyobiRequester:
             response["title"],
         )
 
-    async def post_search(self, data):
-        response = await self.request("POST", "/search", {"search": data})
+    async def post_search(self, data: list[str]):
+        response = await self.request("POST", "/search", json={"search": data})
         return response
 
 
 class HiyobiExt(HiyobiRequester):
-    def __init__(self) -> None:
-        super().__init__()
-
     @staticmethod
     def parse_value_url(value_url_list: list):
-        if not value_url_list:
-            return ["없음"]
-        else:
+        if value_url_list:
             return [f"{value_url_dict['display']}" for value_url_dict in value_url_list]
+
+        return ["없음"]
 
     def make_embed_with_info(self, info: HiyobiTagsModel):
         tags_join = ",".join(self.parse_value_url(info.tags))
@@ -107,14 +104,16 @@ class HiyobiExt(HiyobiRequester):
 
     async def list_embed(self, number: int):
         lists = await self.get_list(number)
-        if lists["count"] == 0:
-            return
-        return [
-            self.make_embed_with_info(model)
-            for model in HiyobiTagsModel.generator_hiyobi_info(lists["list"])
-        ]
+        return (
+            [
+                self.make_embed_with_info(model)
+                for model in HiyobiTagsModel.generator_hiyobi_info(lists["list"])
+            ]
+            if lists.get("count") and lists.get("count") != 0
+            else None
+        )
 
-    async def search_embed(self, search_keyword: list):
+    async def search_embed(self, search_keyword: list[str]):
         lists = await self.post_search(search_keyword)
         if lists["count"] == 0:
             return
