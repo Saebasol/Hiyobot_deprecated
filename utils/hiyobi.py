@@ -15,8 +15,8 @@ class HiyobiTagsModel:
         self.title = title
 
     @classmethod
-    def generator_hiyobi_info(cls, list_: list):
-        for info in list_:
+    def generator_hiyobi_info(cls, _list: list):
+        for info in _list:
             yield cls(
                 info["artists"],
                 info["characters"],
