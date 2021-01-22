@@ -1,6 +1,4 @@
 from Hiyobot.bot import Hiyobot
-import os
-
 import discord
 from discord.ext import commands
 
@@ -85,5 +83,5 @@ class Heliotrope(commands.Cog):
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
 
-def setup(bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Heliotrope(bot))
