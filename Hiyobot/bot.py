@@ -4,6 +4,10 @@ import os
 import discord
 from discord.ext.commands import Bot
 
+from utils.hiyobi import HiyobiExt
+from utils.pixiv import PixivExt
+from utils.rose_ext import RoseExt
+
 logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
@@ -13,7 +17,24 @@ handler.setFormatter(
 logger.addHandler(handler)
 
 
-def load_cogs(bot: Bot):
+class Hiyobot(Bot):
+    def __init__(
+        self, command_prefix, help_command=None, description=None, **options
+    ) -> None:
+        super().__init__(
+            command_prefix,
+            help_command=help_command,
+            description=description,
+            **options
+        )
+        self.github_token = os.environ.get("GitHub")
+        self.verify = os.environ.get("VERIFY")
+        self.hiyobi = HiyobiExt()
+        self.rose = RoseExt(os.environ.get("heliotrope_auth"))
+        self.pixiv = PixivExt()
+
+
+def load_cogs(bot: Hiyobot):
     extensions = [
         "jishaku",
         "events.error",
@@ -42,19 +63,5 @@ def load_cogs(bot: Bot):
     return failed_list
 
 
-class Bot(Bot):
-    def __init__(
-        self, command_prefix, help_command=None, description=None, **options
-    ) -> None:
-        super().__init__(
-            command_prefix,
-            help_command=help_command,
-            description=description,
-            **options
-        )
-        self.github_token = os.environ.get("GitHub")
-        self.verify = os.environ.get("VERIFY")
-
-
 intents = discord.Intents.default()
-bot = Bot(command_prefix="&", intents=intents)
+bot = Hiyobot(command_prefix="&", intents=intents)

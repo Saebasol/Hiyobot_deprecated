@@ -1,4 +1,3 @@
-import aiocache
 import discord
 from discord.ext import commands
 
@@ -7,8 +6,7 @@ from utils.pagenator import pagenator
 
 class Help(commands.Cog):
     def __init__(self, bot):
-        self.bot: commands.Bot = bot
-        self.cache = aiocache.Cache()
+        self.bot = bot
 
     @commands.command(name="도움말", aliases=["help", "도움", "commands", "명령어"])
     async def _help(self, ctx):
@@ -33,8 +31,7 @@ class Help(commands.Cog):
 
             embed_list.append(embed)
 
-        await self.cache.set("help_embed", embed_list)
-        await pagenator(self.bot, ctx, msg, self.cache, "help_embed")
+        await pagenator(self.bot, ctx, msg, embed_list)
 
 
 def setup(bot: commands.Bot):
