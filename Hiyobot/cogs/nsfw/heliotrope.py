@@ -1,9 +1,9 @@
-from Hiyobot.bot import Hiyobot
 import os
 
 import discord
 from discord.ext import commands
 
+from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 
