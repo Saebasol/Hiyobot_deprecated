@@ -7,33 +7,30 @@ from rose.client import _Client
 
 
 class RoseExt(_Client):
-    def __init__(self, authorization):
-        super().__init__(authorization)
-
     @staticmethod
     def parse_value_url(value_url_list: list):
-        if not value_url_list:
-            return ["없음"]
-        else:
+        if value_url_list:
             return [
                 f"[{value_url_dict['value']}](https://hitomi.la{value_url_dict.url})"
                 for value_url_dict in value_url_list
             ]
 
+        return ["없음"]
+
     @staticmethod
     def make_viewer_embed(img_list, total) -> list[Embed]:
-        embed = []
+        embeds = []
         num = 0
 
         for file_info in img_list["images"]:
             num += 1
-            embed.append(
+            embeds.append(
                 discord.Embed()
                 .set_image(url=file_info["url"])
                 .set_footer(text=f"{num}/{total} 페이지")
             )
 
-        return embed
+        return embeds
 
     def make_embed_with_info(self, info):
         tags_join = (
@@ -105,10 +102,7 @@ class RoseExt(_Client):
         if galleryinfo.status != 200:
             return
 
-        total = len(galleryinfo.files)
-        img_list = await self.images(index)
-
-        return self.make_viewer_embed(img_list, total)
+        return self.make_viewer_embed(await self.images(index), len(galleryinfo.files))
 
     async def latency(self):
         heliotrope_latency1 = time.perf_counter()
