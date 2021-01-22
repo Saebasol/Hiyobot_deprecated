@@ -67,5 +67,5 @@ class Hiyobi(commands.Cog):
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
 
-def setup(bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Hiyobi(bot))

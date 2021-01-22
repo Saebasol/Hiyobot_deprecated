@@ -42,7 +42,7 @@ class Pixiv(commands.Cog):
         await msg.edit(embed=embed)
 
     @commands.command(name="픽시브랭킹")
-    async def _pixiv_ranking(self, ctx: commands.Context, mode="일간"):
+    async def _pixiv_ranking(self, ctx: commands.Context, mode: str = "일간"):
         """
         픽시브 랭킹을 가져옵니다.
 
@@ -56,12 +56,12 @@ class Pixiv(commands.Cog):
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
 
-        if mode := mode_dict.get(mode):
-            rank_embed = await self.bot.pixiv.ranking_embed(mode)
+        if param := mode_dict.get(mode):
+            rank_embed = await self.bot.pixiv.ranking_embed(param)
             await pagenator(self.bot, ctx, msg, rank_embed)
         else:
             return await ctx.send("잘못된 값입니다. ``&도움말``을 입력해서 확인해주세요.")
 
 
-def setup(bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Pixiv(bot))

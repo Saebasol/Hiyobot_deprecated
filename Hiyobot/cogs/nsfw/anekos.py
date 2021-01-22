@@ -1,3 +1,4 @@
+from Hiyobot.bot import Hiyobot
 import random
 
 import anekos
@@ -59,5 +60,5 @@ class Nekos(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: commands.Bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Nekos(bot))

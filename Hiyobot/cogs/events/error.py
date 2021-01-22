@@ -1,3 +1,4 @@
+from Hiyobot.bot import Hiyobot
 from discord.ext import commands
 
 
@@ -31,5 +32,5 @@ class Error(commands.Cog):
             )
 
 
-def setup(bot: commands.Bot):
+def setup(bot: Hiyobot):
     bot.add_cog(Error(bot))
