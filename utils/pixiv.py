@@ -84,15 +84,18 @@ class PixivRequester:
 class PixivExt(PixivRequester):
     @staticmethod
     def shuffle_image_url(url: str):
-        parsed_url = re.search(
-            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)", url
+        url_parse_regex = re.compile(
+            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
         )
-        prefix = parsed_url.group(0)
-        main_url = parsed_url.group(1).replace(".", "_")
-        _type = parsed_url.group(2)
-        image = parsed_url.group(3).replace("/", "_")
 
-        return f"{prefix}_{_type}{main_url}_{image}"
+        parsed_url: list[str] = url_parse_regex.findall(url)[0]
+
+        prefix = parsed_url[0]
+        main_url = parsed_url[1].replace(".", "_")
+        type_ = parsed_url[2]
+        image = parsed_url[3].replace("/", "_")
+
+        return f"{prefix}_{type_}{main_url}_{image}"
 
     @staticmethod
     def recompile_date(date: str):
