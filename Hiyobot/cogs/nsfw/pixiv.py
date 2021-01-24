@@ -5,6 +5,7 @@ from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 embed_r18 = discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
+embed_wrongArg = discord.Embed(title="잘못된 값입니다. ``&도움말``을 입력해서 확인해주세요.")
 
 
 class Pixiv(commands.Cog):
@@ -60,7 +61,7 @@ class Pixiv(commands.Cog):
             rank_embed = await self.bot.pixiv.ranking_embed(param)
             await pagenator(self.bot, ctx, msg, rank_embed)
         else:
-            return await ctx.send("잘못된 값입니다. ``&도움말``을 입력해서 확인해주세요.")
+            return await msg.edit(embed=embed_wrongArg)
 
 
 def setup(bot: Hiyobot):
