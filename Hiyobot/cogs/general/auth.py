@@ -12,6 +12,17 @@ class Auth(commands.Cog):
     def __init__(self, bot: Hiyobot):
         self.bot = bot
 
+    async def cog_check(self, ctx: commands.Context):
+        if self.bot.heliotrope_issue and await self.bot.is_owner(ctx.author):
+            await ctx.send(
+                embed=discord.Embed(
+                    title="Heliotrope 서버에 문제가 있어 시도할수 없습니다.",
+                    description="이 문제가 계속된다면 [공식 디스코드](https://discord.gg/PSshFYr)로 문의해주세요",
+                )
+            )
+        else:
+            return True
+
     @commands.command(name="api")
     async def _api(self, ctx: commands.Context, *purpose):
         if not purpose:
