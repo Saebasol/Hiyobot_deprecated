@@ -2,7 +2,9 @@ import logging
 import os
 
 import discord
+from discord.embeds import Embed
 from discord.ext.commands import Bot
+from discord.ext.commands.context import Context
 
 from utils.hiyobi import HiyobiExt
 from utils.pixiv import PixivExt
@@ -25,18 +27,22 @@ class Hiyobot(Bot):
             command_prefix,
             help_command=help_command,
             description=description,
-            **options
+            **options,
         )
         self.github_token = os.environ.get("GitHub")
         self.verify = os.environ.get("VERIFY")
         self.hiyobi = HiyobiExt()
         self.rose = RoseExt(os.environ.get("heliotrope_auth"))
         self.pixiv = PixivExt()
+        self.heliotrope_issue = False
+        self.maintenance = False
+        self.maintenance_message = ""
 
 
 def load_cogs(bot: Hiyobot):
     extensions = [
         "jishaku",
+        "admin.issue",
         "events.error",
         "events.ready",
         "general.help",
@@ -65,3 +71,21 @@ def load_cogs(bot: Hiyobot):
 
 intents = discord.Intents.default()
 bot = Hiyobot(command_prefix="&", intents=intents)
+
+
+@bot.check
+async def user_maintenance_alert(ctx: Context):
+    if bot.maintenance and not await bot.is_owner(ctx.author):
+        await ctx.send(
+            embed=Embed(
+                title="봇이 점검중입니다.", description=f"사유: ``{bot.maintenance_message}``"
+            )
+        )
+    else:
+        return True
+
+
+@bot.before_invoke
+async def admin_maintenance_alert(ctx: Context):
+    if bot.maintenance:
+        await ctx.send("경고: 유지보수 상태입니다.")
