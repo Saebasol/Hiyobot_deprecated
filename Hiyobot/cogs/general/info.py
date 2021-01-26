@@ -76,11 +76,11 @@ class Info(commands.Cog):
         embed.add_field(
             name="Average websocket latency",
             value=f"{round(self.bot.latency * 1000, 2)}ms",
+            inline=False,
         )
         embed.add_field(
             name="Average message latency",
             value=f"{latency}ms",
-            inline=False,
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
