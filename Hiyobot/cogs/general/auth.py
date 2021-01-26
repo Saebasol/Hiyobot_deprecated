@@ -25,8 +25,6 @@ class Auth(commands.Cog):
 
     @commands.command(name="api")
     async def _api(self, ctx: commands.Context, *purpose):
-        if not purpose:
-            return await ctx.send("사용할 목적을 적어주셔야해요!")
         async with aiohttp.ClientSession(
             headers={
                 "Accept": "application/vnd.github.v3+json",
@@ -40,7 +38,7 @@ class Auth(commands.Cog):
             ) as res:
                 if res.status == 200:
                     r = await res.json()
-                    return await ctx.send(
+                    return await ctx.author.send(
                         f"이미 등록되어있어요: ``{r['api_key']}``", delete_after=10
                     )
             async with cs.get(
@@ -86,6 +84,8 @@ class Auth(commands.Cog):
                                             )
                                         )
 
+            if not purpose:
+                return await ctx.send("사용할 목적을 적어주셔야해요!")
             msg = await ctx.send(
                 embed=discord.Embed(
                     title="⚠️경고! 해당 명령어는 개발자전용 명령어 입니다.",
