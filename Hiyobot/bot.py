@@ -78,7 +78,8 @@ async def user_maintenance_alert(ctx: Context):
     if bot.maintenance and not await bot.is_owner(ctx.author):
         await ctx.send(
             embed=Embed(
-                title="봇이 점검중입니다.", description=f"사유: ``{bot.maintenance_message}``"
+                title="봇이 점검중입니다.",
+                description=f"사유: ``{bot.maintenance_message}``\n\n[공식 디코](https://discord.gg/PSshFYr)",
             )
         )
     else:
