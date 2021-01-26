@@ -35,8 +35,8 @@ class RoseExt(_Client):
     def make_embed_with_info(self, info):
         tags_join = (
             ", ".join(self.parse_value_url(info.tags))
-            .replace("♀", "\♀")
-            .replace("♂", "\♂")
+            .replace("♀", "\\♀")
+            .replace("♂", "\\♂")
         )
         embed = discord.Embed(
             title=info.title["value"],
