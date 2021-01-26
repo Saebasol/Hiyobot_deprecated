@@ -1,16 +1,17 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands.context import Context
 
 from Hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 
 class Help(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
 
     @commands.command(name="도움말", aliases=["help", "도움", "commands", "명령어"])
-    async def _help(self, ctx):
+    async def _help(self, ctx: Context):
         msg = await ctx.send(embed=discord.Embed(title="도움말을 만들고 있어요"))
         command_list = [
             i for i in self.bot.commands if i.help if "jishaku" not in i.name

@@ -60,7 +60,7 @@ class Issue(Cog):
 
     @command("유지보수")
     @is_owner()
-    async def _maintenance(self, ctx: Context, message: str = None):
+    async def _maintenance(self, ctx: Context, *message: str):
         if self.bot.maintenance:
             self.bot.maintenance = False
             self.bot.maintenance_message = ""
@@ -71,7 +71,7 @@ class Issue(Cog):
             if not message:
                 return await ctx.send("Need purpose")
             self.bot.maintenance = True
-            self.bot.maintenance_message = message
+            self.bot.maintenance_message = " ".join(message)
             await ctx.send(
                 f"Successfully start under maintenance: {self.bot.maintenance}"
             )
