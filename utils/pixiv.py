@@ -5,6 +5,7 @@ import time
 
 import aiohttp
 import discord
+from bs4 import BeautifulSoup
 
 
 class PixivModel:
@@ -103,6 +104,12 @@ class PixivExt(PixivRequester):
             "%Y년 %m월 %d일"
         )
 
+    @staticmethod
+    def html2text(html: str):
+        soup = BeautifulSoup(html, "html.parser")
+        text_parts = soup.findAll(text=True)
+        return "".join(text_parts)
+
     async def make_illust_embed(self, info: PixivModel):
         illust_url = await self.get_original_url(info.id)
         embed = discord.Embed(description=info.id, color=0x008AE6)
@@ -141,7 +148,7 @@ class PixivExt(PixivRequester):
         embed.set_image(
             url=f"https://doujinshiman.ga/v3/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
-        embed.add_field(name="설명", value=info.comment, inline=True)
+        embed.add_field(name="설명", value=self.html2text(info.comment), inline=True)
         embed.add_field(name="작가", value=info.username, inline=True)
         embed.set_footer(
             text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {self.recompile_date(info.uploadDate)}"
