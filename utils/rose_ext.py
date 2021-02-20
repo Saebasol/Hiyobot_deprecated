@@ -1,47 +1,53 @@
 import time
 from random import choice
+from typing import Iterable
 
 import discord
 from discord.embeds import Embed
-from rose.client import _Client
+from rose import Client  # type: ignore
+from rose.model import (  # type: ignore
+    HeliotropeImages,
+    HeliotropeInfo,
+    HeliotropeValueData,
+)
 
 
-class RoseExt(_Client):
+class RoseExt(Client):
     @staticmethod
-    def parse_value_url(value_url_list: list):
+    def parse_value_url(value_url_list: Iterable[HeliotropeValueData]):
         if value_url_list:
             return [
-                f"[{value_url_dict['value']}](https://hitomi.la{value_url_dict.url})"
+                f"[{value_url_dict.value}](https://hitomi.la{value_url_dict.url})"
                 for value_url_dict in value_url_list
             ]
 
         return ["없음"]
 
     @staticmethod
-    def make_viewer_embed(img_list, total) -> list[Embed]:
+    def make_viewer_embed(img_list: HeliotropeImages, total: int) -> list[Embed]:
         embeds = []
         num = 0
 
-        for file_info in img_list["images"]:
+        for file_info in img_list.images:
             num += 1
             embeds.append(
                 discord.Embed()
-                .set_image(url=file_info["url"])
+                .set_image(url=file_info.url)
                 .set_footer(text=f"{num}/{total} 페이지")
             )
 
         return embeds
 
-    def make_embed_with_info(self, info):
+    def make_embed_with_info(self, info: HeliotropeInfo):
         tags_join = (
             ", ".join(self.parse_value_url(info.tags))
             .replace("♀", "\\♀")
             .replace("♂", "\\♂")
         )
         embed = discord.Embed(
-            title=info.title["value"],
-            description=f"[{info.language['value']}]({info.language['url']})",
-            url=info.title["url"],
+            title=info.title.__next__().value,
+            description=f"[{info.language.__next__().value}]({info.language.__next__().url})",
+            url=info.title.__next__().url,
         )
         embed.set_thumbnail(
             url=f"https://doujinshiman.ga/v3/api/proxy/{info.thumbnail}"
@@ -52,7 +58,9 @@ class RoseExt(_Client):
             inline=False,
         )
         embed.add_field(
-            name="타입", value=f"[{info.type['value']}]({info.type['url']})", inline=False
+            name="타입",
+            value=f"[{info.type.__next__().value}]({info.type.__next__().url})",
+            inline=False,
         )
         embed.add_field(
             name="작가", value=",".join(self.parse_value_url(info.artist)), inline=False
@@ -75,13 +83,13 @@ class RoseExt(_Client):
         )
         return embed
 
-    async def list_embed(self, number):
+    async def list_embed(self, number: int):
         lists = await self.list_(number)
         if lists.status != 200:
             return
         return [self.make_embed_with_info(list_) for list_ in lists.list]
 
-    async def info_embed(self, index):
+    async def info_embed(self, index: int):
         info = await self.info(index)
 
         if info.status != 200:
@@ -92,17 +100,19 @@ class RoseExt(_Client):
     async def random_embed(self):
         index_list = await self.index()
 
-        info = await self.info(choice(index_list))  # type: ignore
+        info = await self.info(choice(index_list))
 
         return self.make_embed_with_info(info)
 
-    async def viewer_embed(self, index):
+    async def viewer_embed(self, index: int):
         galleryinfo = await self.galleryinfo(index)
 
         if galleryinfo.status != 200:
             return
 
-        return self.make_viewer_embed(await self.images(index), len(galleryinfo.files))
+        return self.make_viewer_embed(
+            await self.images(index), len(list(galleryinfo.files))
+        )
 
     async def latency(self):
         heliotrope_latency1 = time.perf_counter()
