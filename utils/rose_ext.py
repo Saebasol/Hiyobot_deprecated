@@ -45,9 +45,9 @@ class RoseExt(Client):
             .replace("♂", "\\♂")
         )
         embed = discord.Embed(
-            title=info.title.__next__().value,
-            description=f"[{info.language.__next__().value}]({info.language.__next__().url})",
-            url=info.title.__next__().url,
+            title=info.title.value,
+            description=f"[{info.language.value}]({info.language.url})",
+            url=info.title.url,
         )
         embed.set_thumbnail(
             url=f"https://doujinshiman.ga/v3/api/proxy/{info.thumbnail}"
@@ -59,7 +59,7 @@ class RoseExt(Client):
         )
         embed.add_field(
             name="타입",
-            value=f"[{info.type.__next__().value}]({info.type.__next__().url})",
+            value=f"[{info.type.value}]({info.type.url})",
             inline=False,
         )
         embed.add_field(
