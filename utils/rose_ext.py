@@ -5,7 +5,11 @@ from typing import Iterable
 import discord
 from discord.embeds import Embed
 from rose import Client  # type: ignore
-from rose.model import HeliotropeImages, HeliotropeInfo, HeliotropeValueData  # type: ignore
+from rose.model import (  # type: ignore
+    HeliotropeImages,
+    HeliotropeInfo,
+    HeliotropeValueData,
+)
 
 
 class RoseExt(Client):
