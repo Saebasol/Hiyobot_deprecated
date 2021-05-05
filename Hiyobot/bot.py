@@ -51,7 +51,6 @@ def load_cogs(bot: Hiyobot):
         "general.auth",
         "nsfw.anekos",
         "nsfw.heliotrope",
-        "nsfw.hiyobi",
         "nsfw.pixiv",
     ]
 
