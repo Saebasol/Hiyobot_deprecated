@@ -6,7 +6,6 @@ from discord.embeds import Embed
 from discord.ext.commands import Bot
 from discord.ext.commands.context import Context
 
-from utils.hiyobi import HiyobiExt
 from utils.pixiv import PixivExt
 from utils.rose_ext import RoseExt
 
@@ -31,7 +30,6 @@ class Hiyobot(Bot):
         )
         self.github_token = os.environ.get("GitHub")
         self.verify = os.environ.get("VERIFY")
-        self.hiyobi = HiyobiExt()
         self.rose = RoseExt(os.environ.get("heliotrope_auth"))
         self.pixiv = PixivExt()
         self.heliotrope_issue = False
