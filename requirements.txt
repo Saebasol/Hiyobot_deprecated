@@ -3,5 +3,6 @@ discord.py==1.6.0
 jishaku==1.20.0.220
 psutil==5.8.0
 beautifulsoup4==4.9.3
+mintchoco==1.0.0
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper.git
-git+https://github.com/Saebasol/Rose.git
+
