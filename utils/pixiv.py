@@ -114,7 +114,7 @@ class PixivExt(PixivRequester):
         illust_url = await self.get_original_url(info.id)
         embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_image(
-            url=f"https://doujinshiman.ga/v3/api/proxy/{self.shuffle_image_url(illust_url)}"
+            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
         embed.set_author(
             name=info.title, url=f"https://www.pixiv.net/artworks/{info.id}"
@@ -131,7 +131,7 @@ class PixivExt(PixivRequester):
             color=0x008AE6,
         )
         embed.set_image(
-            url=f"https://doujinshiman.ga/v3/api/proxy/{self.shuffle_image_url(illust_url)}"
+            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
         embed.set_author(name=f"#{info.rank} | {info.title}")
         embed.set_footer(text=f"Illust by {info.username}")
@@ -146,7 +146,7 @@ class PixivExt(PixivRequester):
             color=0x008AE6,
         )
         embed.set_image(
-            url=f"https://doujinshiman.ga/v3/api/proxy/{self.shuffle_image_url(illust_url)}"
+            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
         embed.add_field(name="설명", value=self.html2text(info.comment), inline=True)
         embed.add_field(name="작가", value=info.username, inline=True)
