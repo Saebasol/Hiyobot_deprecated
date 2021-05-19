@@ -68,5 +68,3 @@ def load_cogs(bot: Hiyobot):
 
 intents = discord.Intents.default()
 bot = Hiyobot(command_prefix="&", intents=intents)
-
-
