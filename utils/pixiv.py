@@ -1,42 +1,39 @@
 import asyncio
-import datetime
-import re
-import time
-
 import aiohttp
 import discord
 from bs4 import BeautifulSoup
+import re
+import time
 
 
-class PixivModel:
-    def __init__(self, bookmark, comment, _id, like, title, username, uploadDate, view):
+class PixivInfoModel:
+    def __init__(self, bookmark, comment, id, like, username, date, view):
         self.bookmark = bookmark
         self.comment = comment
-        self.id = _id
+        self.id = id
         self.like = like
-        self.title = title
         self.username = username
-        self.uploadDate = uploadDate
+        self.date = date
         self.view = view
 
 
-class PixivRankingModel:
-    def __init__(self, _id, rank, title, url, username):
-        self.id = _id
-        self.rank = rank
+class PixivIllustModel:
+    def __init__(self, id, title, url, username, rank=None):
+        self.id = id
         self.title = title
         self.url = url
         self.username = username
+        self.rank = rank
 
     @classmethod
-    def generator_pixiv_ranking_info(cls, list_: list):
-        for info in list_:
+    def generate_pixiv_ranking_info(cls, info_list: list):
+        for info in info_list:
             yield cls(
                 info["illust_id"],
-                info["rank"],
                 info["title"],
                 info["url"],
                 info["user_name"],
+                info["rank"],
             )
 
 
@@ -48,38 +45,44 @@ class PixivRequester:
             async with cs.request(method, url, **kwargs) as r:
                 if r.status != 200:
                     return None
-                response = await r.json(content_type=None)
-                return response
+                return await r.json(content_type=None)
 
     async def get_ranking(self, mode: str):
         return await self.request(
             "GET",
-            f"/ranking.php",
+            "/ranking.php",
             params={"format": "json", "content": "illust", "mode": mode},
         )
 
     async def get_original_url(self, index: int):
         resp = await self.request("GET", f"/ajax/illust/{index}/pages")
-        url = resp["body"][0]["urls"]["original"]
-        return url
+        return resp["body"][0]["urls"]["original"]
 
     async def get_info(self, index: int):
         resp = await self.request("GET", f"/ajax/illust/{index}")
         if resp["error"]:
-            return discord.Embed(title="결과가 없습니다. 정확히 입력했는지 확인해주세요.")
-        elif resp["body"]["tags"]["tags"][0]["tag"] == "R-18":
-            return discord.Embed(title="현재 R-18 일러스트는 확인이 불가능합니다.")
-        else:
-            return PixivModel(
-                resp["body"]["bookmarkCount"],
-                resp["body"]["illustComment"],
-                resp["body"]["id"],
-                resp["body"]["likeCount"],
-                resp["body"]["title"],
-                resp["body"]["userName"],
-                resp["body"]["uploadDate"],
-                resp["body"]["viewCount"],
-            )
+            return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
+        return PixivInfoModel(
+            resp["body"]["bookmarkCount"],
+            resp["body"]["illustComment"],
+            resp["body"]["id"],
+            resp["body"]["likeCount"],
+            resp["body"]["title"],
+            resp["body"]["userName"],
+            resp["body"]["uploadDate"],
+            resp["body"]["viewCount"],
+        )
+
+    async def get_illust(self, index: int):
+        resp = await self.request("GET", f"/ajax/illust/{index}")
+        if resp["error"]:
+            return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
+        return PixivIllustModel(
+            resp["body"]["id"],
+            resp["body"]["title"],
+            resp["body"]["urls"]["original"],
+            resp["body"]["userName"],
+        )
 
 
 class PixivExt(PixivRequester):
@@ -99,45 +102,12 @@ class PixivExt(PixivRequester):
         return f"{prefix}_{type_}{main_url}_{image}"
 
     @staticmethod
-    def recompile_date(date: str):
-        return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime(
-            "%Y년 %m월 %d일"
-        )
-
-    @staticmethod
     def html2text(html: str):
         soup = BeautifulSoup(html, "html.parser")
         text_parts = soup.findAll(text=True)
         return "".join(text_parts)
 
-    async def make_illust_embed(self, info: PixivModel):
-        illust_url = await self.get_original_url(info.id)
-        embed = discord.Embed(description=info.id, color=0x008AE6)
-        embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
-        )
-        embed.set_author(
-            name=info.title, url=f"https://www.pixiv.net/artworks/{info.id}"
-        )
-        embed.set_footer(text=f"Illust by {info.username}")
-
-        return embed
-
-    async def make_ranking_illust_embed(self, info: PixivRankingModel):
-        illust_url = await self.get_original_url(info.id)
-        embed = discord.Embed(description=info.id, color=0x008AE6)
-        embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
-        )
-        embed.set_author(
-            name=f"#{info.rank} | {info.title}",
-            url=f"https://www.pixiv.net/artworks/{info.id}",
-        )
-        embed.set_footer(text=f"Illust by {info.username}")
-
-        return embed
-
-    async def make_info_embed(self, info: PixivModel):
+    async def make_info_embed(self, info: PixivInfoModel):
         illust_url = await self.get_original_url(info.id)
         embed = discord.Embed(
             title=info.title,
@@ -145,14 +115,24 @@ class PixivExt(PixivRequester):
             color=0x008AE6,
         )
         embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+            f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
         embed.add_field(name="설명", value=self.html2text(info.comment), inline=True)
         embed.add_field(name="작가", value=info.username, inline=True)
         embed.set_footer(
             text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {self.recompile_date(info.uploadDate)}"
         )
+        return embed
 
+    async def make_illust_embed(self, info: PixivIllustModel, is_ranking: bool = False):
+        illust_url = await self.get_original_url(info.id)
+        title = f"#{info.rank} | {info.title}" if is_ranking else info.title
+        embed = discord.Embed(description=info.id, color=0x008AE6)
+        embed.set_author(name=title, url=f"https://www.pixiv.net/artworks/{info.id}")
+        embed.set_image(
+            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+        )
+        embed.set_footer(text=f"Illust by {info.username}")
         return embed
 
     async def handle(self, resp, type):
@@ -164,11 +144,11 @@ class PixivExt(PixivRequester):
         elif type == "info":
             return await self.make_info_embed(resp)
 
-    async def illust_embed(self, index):
-        info = await self.get_info(index)
+    async def illust_embed(self, index: int):
+        info = await self.get_illust(index)
         return await self.handle(info, "illust")
 
-    async def info_embed(self, index):
+    async def info_embed(self, index: int):
         info = await self.get_info(index)
         return await self.handle(info, "info")
 
@@ -178,10 +158,11 @@ class PixivExt(PixivRequester):
             await asyncio.gather(
                 *list(
                     map(
-                        self.make_ranking_illust_embed,
-                        PixivRankingModel.generator_pixiv_ranking_info(
+                        self.make_illust_embed,
+                        PixivIllustModel.generate_pixiv_ranking_info(
                             ranking["contents"]
                         ),
+                        True,
                     )
                 )
             )
