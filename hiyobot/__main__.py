@@ -1,8 +1,6 @@
-import os
+from os import getenv
 
-from Hiyobot.bot import bot, load_cogs
+from hiyobot.bot import run
 
-load_cogs(bot)
-
-if token := os.environ.get("token"):
-    bot.run(token)
+if token := getenv("DISCORD_BOT_TOKEN"):
+    run(token)
