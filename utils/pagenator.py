@@ -6,7 +6,7 @@ from discord.embeds import Embed
 from discord.ext.commands.context import Context
 from discord.message import Message
 
-from Hiyobot.bot import Hiyobot
+from hiyobot.bot import Hiyobot
 
 
 async def pagenator(

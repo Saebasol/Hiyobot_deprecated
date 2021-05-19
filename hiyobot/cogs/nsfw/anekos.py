@@ -7,7 +7,7 @@ from discord.ext.commands.cog import Cog
 from discord.ext.commands.context import Context
 from discord.ext.commands.core import command
 
-from Hiyobot.bot import Hiyobot
+from hiyobot.bot import Hiyobot
 from utils.anekos import get_url, sfw_tags, nsfw_tags
 
 

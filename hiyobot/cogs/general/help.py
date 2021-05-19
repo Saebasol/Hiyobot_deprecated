@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands.context import Context
 
-from Hiyobot.bot import Hiyobot
+from hiyobot.bot import Hiyobot
 from utils.pagenator import pagenator
 
 

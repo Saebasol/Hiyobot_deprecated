@@ -24,7 +24,7 @@ def load_cogs(bot: Hiyobot):
             .replace(".py", "")
             .replace("\\", ".")
             .replace("/", "."),
-            filter(lambda path: "__" not in path, glob("./Hiyobot/cogs/*/*")),
+            filter(lambda path: "__" not in path, glob("./hiyobot/cogs/*/*")),
         )
     )
     extensions.append("jishaku")

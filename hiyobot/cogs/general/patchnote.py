@@ -2,8 +2,8 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-import Hiyobot
-from Hiyobot.bot import Hiyobot as class_hiyobot
+import hiyobot
+from hiyobot.bot import Hiyobot
 
 
 class PatchNote(commands.Cog):
@@ -21,12 +21,12 @@ class PatchNote(commands.Cog):
         headers = {"Accept": "application/vnd.github.v3+json"}
         async with aiohttp.ClientSession() as cs:
             async with cs.get(
-                f"https://api.github.com/repos/Saebasol/Hiyobot/releases/tags/{Hiyobot.__version__}",
+                f"https://api.github.com/repos/Saebasol/Hiyobot/releases/tags/{hiyobot.__version__}",
                 headers=headers,
             ) as r:
                 if r.status == 404:
                     return await ctx.send(
-                        f"해당 버전 ``{Hiyobot.__version__}``의 릴리즈가 아직 존재하지 않아요."
+                        f"해당 버전 ``{hiyobot.__version__}``의 릴리즈가 아직 존재하지 않아요."
                     )
                 response_json = await r.json()
 
@@ -38,5 +38,5 @@ class PatchNote(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: class_hiyobot):
+def setup(bot: Hiyobot):
     bot.add_cog(PatchNote(bot))
