@@ -125,15 +125,14 @@ class PixivExt(PixivRequester):
 
     async def make_ranking_illust_embed(self, info: PixivRankingModel):
         illust_url = await self.get_original_url(info.id)
-        embed = discord.Embed(
-            url=f"https://www.pixiv.net/artworks/{info.id}",
-            description=info.id,
-            color=0x008AE6,
-        )
+        embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_image(
             url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
-        embed.set_author(name=f"#{info.rank} | {info.title}")
+        embed.set_author(
+            name=f"#{info.rank} | {info.title}",
+            url=f"https://www.pixiv.net/artworks/{info.id}",
+        )
         embed.set_footer(text=f"Illust by {info.username}")
 
         return embed
