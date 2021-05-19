@@ -28,7 +28,6 @@ class Hiyobot(Bot):
             description=description,
             **options,
         )
-        self.github_token = os.environ.get("GitHub")
         self.verify = os.environ.get("VERIFY")
         self.rose = RoseExt(os.environ.get("heliotrope_auth"))
         self.pixiv = PixivExt()
