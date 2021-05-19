@@ -68,22 +68,3 @@ def load_cogs(bot: Hiyobot):
 
 intents = discord.Intents.default()
 bot = Hiyobot(command_prefix="&", intents=intents)
-
-
-@bot.check
-async def user_maintenance_alert(ctx: Context):
-    if bot.maintenance and not await bot.is_owner(ctx.author):
-        await ctx.send(
-            embed=Embed(
-                title="봇이 점검중입니다.",
-                description=f"사유: ``{bot.maintenance_message}``\n\n[공식 디코](https://discord.gg/PSshFYr)",
-            )
-        )
-    else:
-        return True
-
-
-@bot.before_invoke
-async def admin_maintenance_alert(ctx: Context):
-    if bot.maintenance:
-        await ctx.send("경고: 유지보수 상태입니다.")
