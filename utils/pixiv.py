@@ -130,9 +130,12 @@ class PixivExt(PixivRequester):
         )
         return embed
 
-    async def make_illust_embed(self, info: PixivIllustModel, is_ranking: bool = False):
+    async def make_illust_embed(self, info: PixivIllustModel):
         illust_url = await self.get_original_url(info.id)
-        title = f"#{info.rank} | {info.title}" if is_ranking else info.title
+        if info.rank:
+            title = f"#{info.rank} | {info.title}"
+        else:
+            title = info.title
         embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_author(name=title, url=f"https://www.pixiv.net/artworks/{info.id}")
         embed.set_image(
@@ -168,7 +171,6 @@ class PixivExt(PixivRequester):
                         PixivIllustModel.generate_pixiv_ranking_info(
                             ranking["contents"]
                         ),
-                        True,
                     )
                 )
             )
