@@ -7,11 +7,12 @@ import time
 
 
 class PixivInfoModel:
-    def __init__(self, bookmark, comment, id, like, username, date, view):
+    def __init__(self, bookmark, comment, id, like, title, username, date, view):
         self.bookmark = bookmark
         self.comment = comment
         self.id = id
         self.like = like
+        self.title = title
         self.username = username
         self.date = date
         self.view = view
