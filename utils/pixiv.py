@@ -131,7 +131,6 @@ class PixivExt(PixivRequester):
         return embed
 
     async def make_illust_embed(self, info: PixivIllustModel):
-        illust_url = await self.get_original_url(info.id)
         if info.rank:
             title = f"#{info.rank} | {info.title}"
         else:
@@ -139,7 +138,7 @@ class PixivExt(PixivRequester):
         embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_author(name=title, url=f"https://www.pixiv.net/artworks/{info.id}")
         embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(info.url)}"
         )
         embed.set_footer(text=f"Illust by {info.username}")
         return embed
