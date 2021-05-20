@@ -111,7 +111,7 @@ class PixivExt(PixivRequester):
 
     @staticmethod
     def recompile_date(date: str):
-        return datetime.strftime(date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y년 %m월 %d일")
+        return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y년 %m월 %d일")
 
     async def make_info_embed(self, info: PixivInfoModel):
         illust_url = await self.get_original_url(info.id)
