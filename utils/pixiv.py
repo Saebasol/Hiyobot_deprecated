@@ -4,6 +4,7 @@ import discord
 from bs4 import BeautifulSoup
 import re
 import time
+from datetime import datetime
 
 
 class PixivInfoModel:
@@ -107,6 +108,10 @@ class PixivExt(PixivRequester):
         soup = BeautifulSoup(html, "html.parser")
         text_parts = soup.findAll(text=True)
         return "".join(text_parts)
+
+    @staticmethod
+    def recompile_date(date: str):
+        return datetime.strftime(date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y년 %m월 %d일")
 
     async def make_info_embed(self, info: PixivInfoModel):
         illust_url = await self.get_original_url(info.id)
