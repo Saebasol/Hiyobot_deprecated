@@ -116,7 +116,7 @@ class PixivExt(PixivRequester):
             color=0x008AE6,
         )
         embed.set_image(
-            f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
         embed.add_field(name="설명", value=self.html2text(info.comment), inline=True)
         embed.add_field(name="작가", value=info.username, inline=True)
