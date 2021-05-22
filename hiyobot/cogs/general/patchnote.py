@@ -1,6 +1,6 @@
 import discord
-from discord.ext.commands.cog import Cog
 from discord.ext.commands import command
+from discord.ext.commands.cog import Cog
 from discord.ext.commands.context import Context
 
 import hiyobot

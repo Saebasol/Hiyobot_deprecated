@@ -1,9 +1,9 @@
-from utils.request import Request
 import discord
 from discord.ext.commands.cog import Cog
 
 import hiyobot
 from hiyobot.bot import Hiyobot
+from utils.request import Request
 
 
 class Ready(Cog):
