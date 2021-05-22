@@ -2,17 +2,16 @@ import random
 from typing import Any
 
 import discord
-
 from discord.ext.commands.cog import Cog
 from discord.ext.commands.context import Context
 from discord.ext.commands.core import command
 
 from hiyobot.bot import Hiyobot
-from utils.anekos import get_url, sfw_tags, nsfw_tags
+from utils.anekos import URL, nsfw_tags, sfw_tags
 
 
 class Nekos(Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
 
     @command(name="네코", aliases=["neko"])
@@ -51,7 +50,7 @@ class Nekos(Cog):
         else:
             tag = random.choice(sfw_tags if not ctx.channel.is_nsfw() else nsfw_tags)  # type: ignore
 
-        img_url = await get_url(tag)
+        img_url = (await self.bot.request.get(URL + tag, "json")).body["url"]
         await ctx.send(embed=embed.set_image(url=img_url))
 
 

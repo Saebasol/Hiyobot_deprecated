@@ -1,15 +1,16 @@
 import discord
-from discord.ext import commands
+from discord.ext.commands.cog import Cog
 
 import hiyobot
 from hiyobot.bot import Hiyobot
+from utils.request import Request
 
 
-class Ready(commands.Cog):
+class Ready(Cog):
     def __init__(self, bot: Hiyobot):
         self.bot = bot
 
-    @commands.Cog.listener()
+    @Cog.listener()
     async def on_ready(self):
         print("Login.. : ")
         print(self.bot.user.name)
@@ -17,6 +18,7 @@ class Ready(commands.Cog):
 
         game = discord.Game(f"&도움말 | {hiyobot.__version__}")
         await self.bot.change_presence(status=discord.Status.online, activity=game)
+        self.bot.request = Request()
 
 
 def setup(bot: Hiyobot):
