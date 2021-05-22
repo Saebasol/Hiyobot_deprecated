@@ -1,12 +1,14 @@
-from typing import Any
-from utils.notion import Notion
-from discord.ext.commands.context import Context
-from discord.ext.commands.core import command
-from hiyobot.bot import Hiyobot
-from discord.ext.commands.cog import Cog
-from discord.embeds import Embed
 from asyncio.exceptions import TimeoutError
 from contextlib import suppress
+from typing import Any
+
+from discord.embeds import Embed
+from discord.ext.commands.cog import Cog
+from discord.ext.commands.context import Context
+from discord.ext.commands.core import command
+
+from hiyobot.bot import Hiyobot
+from utils.notion import Notion
 
 
 class Contact(Cog):

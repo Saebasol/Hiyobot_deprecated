@@ -2,13 +2,12 @@ import random
 from typing import Any
 
 import discord
-
 from discord.ext.commands.cog import Cog
 from discord.ext.commands.context import Context
 from discord.ext.commands.core import command
 
 from hiyobot.bot import Hiyobot
-from utils.anekos import URL, sfw_tags, nsfw_tags
+from utils.anekos import URL, nsfw_tags, sfw_tags
 
 
 class Nekos(Cog):

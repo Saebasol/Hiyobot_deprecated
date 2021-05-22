@@ -1,6 +1,7 @@
-from typing import Any, Literal, Optional
-from aiohttp import ClientSession
 from dataclasses import dataclass
+from typing import Any, Literal, Optional
+
+from aiohttp import ClientSession
 
 
 @dataclass

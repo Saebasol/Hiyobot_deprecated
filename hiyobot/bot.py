@@ -1,10 +1,11 @@
 from glob import glob
 from os import getenv
 from typing import Optional
-from utils.request import Request
 
 import discord
 from discord.ext.commands.bot import Bot
+
+from utils.request import Request
 
 
 class Hiyobot(Bot):
