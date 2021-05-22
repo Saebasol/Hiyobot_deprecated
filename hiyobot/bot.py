@@ -1,7 +1,10 @@
 from glob import glob
+from os import getenv
+from typing import Optional
+from utils.request import Request
 
 import discord
-from discord.ext.commands import Bot
+from discord.ext.commands.bot import Bot
 
 
 class Hiyobot(Bot):
@@ -15,6 +18,9 @@ class Hiyobot(Bot):
         self.heliotrope_issue = False
         self.maintenance = False
         self.maintenance_message = ""
+        self.notion_secret = getenv("NOTION_SECRET")
+        self.notion_database_id = getenv("NOTION_ID")
+        self.request: Optional[Request] = None
 
 
 def load_cogs(bot: Hiyobot):
@@ -42,6 +48,6 @@ def load_cogs(bot: Hiyobot):
 
 def run(token: str):
     intents = discord.Intents.default()
-    bot = Hiyobot(command_prefix="&", intents=intents)
+    bot = Hiyobot(command_prefix="설마프리픽스겹치겠냐", intents=intents)
     load_cogs(bot)
     bot.run(token)
