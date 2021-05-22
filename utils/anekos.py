@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 from typing import Literal, get_args
 
 from aiohttp import ClientSession
+
+from hiyobot.bot import Hiyobot
 
 BASE_URL = "https://nekos.life/api/"
 VERSION = "v2"
@@ -82,9 +85,3 @@ sfw_tags_literal = Literal[
 
 sfw_tags = get_args(sfw_tags_literal)
 nsfw_tags = get_args(nsfw_tags_literal)
-
-
-async def get_url(tag: sfw_tags_literal | nsfw_tags_literal):
-    async with ClientSession() as cs:
-        async with cs.get(URL + tag) as r:
-            return (await r.json())["url"]
