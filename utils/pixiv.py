@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 class PixivInfoModel:
-    def __init__(self, bookmark, comment, id, like, title, username, date, view):
+    def __init__(self, bookmark, comment, id, like, title, username, upload_date, view):
         self.bookmark = bookmark
         self.comment = comment
         self.id = id
