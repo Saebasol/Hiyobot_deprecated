@@ -15,7 +15,7 @@ class PixivInfoModel:
         self.like = like
         self.title = title
         self.username = username
-        self.date = date
+        self.upload_date = upload_date
         self.view = view
 
 
