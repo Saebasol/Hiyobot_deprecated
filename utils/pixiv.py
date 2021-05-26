@@ -87,7 +87,7 @@ class PixivRequester:
         )
 
 
-class PixivExt(PixivRequester):
+class PixivResolver(PixivRequester):
     @staticmethod
     def shuffle_image_url(url: str):
         url_parse_regex = re.compile(
