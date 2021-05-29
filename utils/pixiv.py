@@ -49,6 +49,21 @@ class PixivRequester:
                     return None
                 return await r.json(content_type=None)
 
+    @staticmethod
+    def shuffle_image_url(url: str):
+        url_parse_regex = re.compile(
+            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
+        )
+
+        parsed_url: list[str] = url_parse_regex.findall(url)[0]
+
+        prefix = parsed_url[0]
+        main_url = parsed_url[1].replace(".", "_")
+        type_ = parsed_url[2]
+        image = parsed_url[3].replace("/", "_")
+
+        return f"{prefix}_{type_}{main_url}_{image}"
+
     async def get_ranking(self, mode: str):
         return await self.request(
             "GET",
@@ -58,7 +73,10 @@ class PixivRequester:
 
     async def get_original_url(self, index: int):
         resp = await self.request("GET", f"/ajax/illust/{index}/pages")
-        return resp["body"][0]["urls"]["original"]
+        if not resp:
+            return None
+        illust_url = resp["body"][0]["urls"]["original"]
+        return f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
 
     async def get_info(self, index: int):
         resp = await self.request("GET", f"/ajax/illust/{index}")
@@ -89,21 +107,6 @@ class PixivRequester:
 
 class PixivResolver(PixivRequester):
     @staticmethod
-    def shuffle_image_url(url: str):
-        url_parse_regex = re.compile(
-            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
-        )
-
-        parsed_url: list[str] = url_parse_regex.findall(url)[0]
-
-        prefix = parsed_url[0]
-        main_url = parsed_url[1].replace(".", "_")
-        type_ = parsed_url[2]
-        image = parsed_url[3].replace("/", "_")
-
-        return f"{prefix}_{type_}{main_url}_{image}"
-
-    @staticmethod
     def html2text(html: str):
         soup = BeautifulSoup(html, "html.parser")
         text_parts = soup.findAll(text=True)
@@ -114,15 +117,12 @@ class PixivResolver(PixivRequester):
         return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S%z").strftime("%Y년 %m월 %d일")
 
     async def make_info_embed(self, info: PixivInfoModel):
-        illust_url = await self.get_original_url(info.id)
         embed = discord.Embed(
             title=info.title,
             url=f"https://www.pixiv.net/artworks/{info.id}",
             color=0x008AE6,
         )
-        embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
-        )
+        embed.set_image(url=await self.get_original_url(info.id))
         embed.add_field(name="설명", value=self.html2text(info.comment), inline=True)
         embed.add_field(name="작가", value=info.username, inline=True)
         embed.set_footer(
