@@ -82,26 +82,28 @@ class PixivRequester:
         resp = await self.request("GET", f"/ajax/illust/{index}")
         if not resp:
             return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
+        resp = resp["body"]
         return PixivInfoModel(
-            resp["body"]["bookmarkCount"],
-            resp["body"]["illustComment"],
-            resp["body"]["id"],
-            resp["body"]["likeCount"],
-            resp["body"]["title"],
-            resp["body"]["userName"],
-            resp["body"]["uploadDate"],
-            resp["body"]["viewCount"],
+            resp["bookmarkCount"],
+            resp["illustComment"],
+            resp["id"],
+            resp["likeCount"],
+            resp["title"],
+            resp["userName"],
+            resp["uploadDate"],
+            resp["viewCount"],
         )
 
     async def get_illust(self, index: int):
         resp = await self.request("GET", f"/ajax/illust/{index}")
         if not resp:
             return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
+        resp = resp["body"]
         return PixivIllustModel(
-            resp["body"]["id"],
-            resp["body"]["title"],
-            resp["body"]["urls"]["original"],
-            resp["body"]["userName"],
+            resp["id"],
+            resp["title"],
+            resp["urls"]["original"],
+            resp["userName"],
         )
 
 
