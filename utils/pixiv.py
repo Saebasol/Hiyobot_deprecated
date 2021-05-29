@@ -126,7 +126,7 @@ class PixivResolver(PixivRequester):
         embed.add_field(name="설명", value=self.html2text(info.comment), inline=True)
         embed.add_field(name="작가", value=info.username, inline=True)
         embed.set_footer(
-            text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {self.recompile_date(info.date)}"
+            text=f"👍 {info.like} ❤️ {info.bookmark} 👁️ {info.view} • 업로드 날짜 {self.recompile_date(info.upload_date)}"
         )
         return embed
 
