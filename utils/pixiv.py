@@ -74,7 +74,7 @@ class PixivRequester:
     async def get_original_url(self, index: int):
         resp = await self.request("GET", f"/ajax/illust/{index}/pages")
         if not resp:
-            return None
+            return "https://cdn.discordapp.com/attachments/848196621194756126/848196685389365268/unnamed_1.png"
         illust_url = resp["body"][0]["urls"]["original"]
         return f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
 
