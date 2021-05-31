@@ -21,12 +21,13 @@ class PixivInfoModel:
 
 
 class PixivIllustModel:
-    def __init__(self, id, title, url, username, rank=None):
+    def __init__(self, id, title, url, username, rank=None, is_r18=False):
         self.id = id
         self.title = title
         self.url = url
         self.username = username
         self.rank = rank
+        self.is_r18 = is_r18
 
     @classmethod
     def generate_pixiv_ranking_info(cls, info_list: list):
@@ -103,6 +104,7 @@ class PixivRequester(Request):
             resp["title"],
             resp["urls"]["original"],
             resp["userName"],
+            is_r18=resp["tags"]["tags"][0]["tag"] == "R-18",
         )
 
 
@@ -153,8 +155,10 @@ class PixivResolver(PixivRequester):
         elif type == "info":
             return await self.make_info_embed(resp)
 
-    async def illust_embed(self, index: int):
+    async def illust_embed(self, index: int, is_nsfw: bool):
         info = await self.get_illust(index)
+        if info.is_r18 and is_nsfw == False:
+            return discord.Embed(title="R-18 일러스트는 연령 제한 채널에서만 확인하실 수 있습니다.")
         return await self.handle(info, "illust")
 
     async def info_embed(self, index: int):
