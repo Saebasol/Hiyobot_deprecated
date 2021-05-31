@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import time
 from datetime import datetime
+from utils.request import Request
 
 
 class PixivInfoModel:
@@ -39,15 +40,12 @@ class PixivIllustModel:
             )
 
 
-class PixivRequester:
-    @staticmethod
-    async def request(method, endpoint, **kwargs):
-        url = "https://www.pixiv.net" + endpoint
-        async with aiohttp.ClientSession() as cs:
-            async with cs.request(method, url, **kwargs) as r:
-                if r.status != 200:
-                    return None
-                return await r.json(content_type=None)
+class PixivRequester(Request):
+    async def get(self, endpoint, **kwargs):
+        resp = await super().get("https://www.pixiv.net" + endpoint, "json", **kwargs)
+        if resp.status != 200:
+            return None
+        return resp.body
 
     @staticmethod
     def shuffle_image_url(url: str):
@@ -65,21 +63,22 @@ class PixivRequester:
         return f"{prefix}_{type_}{main_url}_{image}"
 
     async def get_ranking(self, mode: str):
-        return await self.request(
-            "GET",
-            "/ranking.php",
-            params={"format": "json", "content": "illust", "mode": mode},
+        return await (
+            self.get(
+                "/ranking.php",
+                params={"format": "json", "content": "illust", "mode": mode},
+            )
         )
 
     async def get_original_url(self, index: int):
-        resp = await self.request("GET", f"/ajax/illust/{index}/pages")
+        resp = await self.get(f"/ajax/illust/{index}/pages")
         if not resp:
             return "https://cdn.discordapp.com/attachments/848196621194756126/848196685389365268/unnamed_1.png"
         illust_url = resp["body"][0]["urls"]["original"]
         return f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
 
     async def get_info(self, index: int):
-        resp = await self.request("GET", f"/ajax/illust/{index}")
+        resp = await self.get(f"/ajax/illust/{index}")
         if not resp:
             return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
         resp = resp["body"]
@@ -95,7 +94,7 @@ class PixivRequester:
         )
 
     async def get_illust(self, index: int):
-        resp = await self.request("GET", f"/ajax/illust/{index}")
+        resp = await self.get(f"/ajax/illust/{index}")
         if not resp:
             return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
         resp = resp["body"]
