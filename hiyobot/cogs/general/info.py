@@ -90,15 +90,15 @@ class Info(commands.Cog):
         )
         embed.add_field(
             name="Average Hiyobi API server latency",
-            value=f"{hiyobi_latency if hiyobi_latency else '가져올 수 없음'}ms",
+            value=f"{hiyobi_latency}ms" if hiyobi_latency else "가져올 수 없음",
         )
         embed.add_field(
             name="Average Heliotrope server latency",
-            value=f"{heliotrope_latency if heliotrope_latency else '가져올 수 없음'}ms",
+            value=f"{heliotrope_latency}ms" if heliotrope_latency else "가져올 수 없음",
         )
         embed.add_field(
             name="Average Pixiv API server latency",
-            value=f"{pixiv_latency if pixiv_latency else '가져올 수 없음'}ms",
+            value=f"{pixiv_latency}ms" if pixiv_latency else "가져올 수 없음",
         )
         await ctx.send(embed=embed)
 
