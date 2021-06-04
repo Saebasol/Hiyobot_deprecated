@@ -9,12 +9,12 @@ import psutil
 from aiohttp.client_exceptions import ContentTypeError
 from discord.ext import commands
 
-import Hiyobot
-from Hiyobot.bot import Hiyobot as class_hiyobot
+import hiyobot
+from hiyobot.bot import Hiyobot
 
 
 class Info(commands.Cog):
-    def __init__(self, bot: class_hiyobot):
+    def __init__(self, bot: Hiyobot):
         self.bot = bot
         self.proc = psutil.Process()
 
@@ -45,7 +45,7 @@ class Info(commands.Cog):
             pixiv_latency = None
 
         embed = discord.Embed(
-            title=f"Info\nCommand prefix: `&`\nHiyobot: `{Hiyobot.__version__}`",
+            title=f"Info\nCommand prefix: `&`\nHiyobot: `{hiyobot.__version__}`",
             description=f"Python `{sys.version}` on `{sys.platform}`".replace("\n", ""),
             url="https://saebasol.statuspage.io/",
         )
@@ -97,5 +97,5 @@ class Info(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot: class_hiyobot):
+def setup(bot: Hiyobot):
     bot.add_cog(Info(bot))
