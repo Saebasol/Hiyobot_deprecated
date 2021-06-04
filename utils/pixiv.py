@@ -1,10 +1,12 @@
 import asyncio
-import aiohttp
-import discord
-from bs4 import BeautifulSoup
 import re
 import time
 from datetime import datetime
+
+import aiohttp
+import discord
+from bs4 import BeautifulSoup
+
 from utils.request import Request
 
 
