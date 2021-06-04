@@ -29,16 +29,10 @@ class Info(commands.Cog):
         await ctx.trigger_typing()
         latency = round((time.perf_counter() - message_latency) * 1000, 2)
 
-        hiyobi_latency = self.bot.hiyobi.latency()
         heliotrope_latency = self.bot.rose.latency()
         pixiv_latency = self.bot.pixiv.latency()
 
         await asyncio.wait([hiyobi_latency, heliotrope_latency, pixiv_latency])
-
-        try:
-            hiyobi_latency = round(hiyobi_latency * 1000, 2)
-        except JSONDecodeError:
-            hiyobi_latency = None
 
         try:
             heliotrope_latency = round(heliotrope_latency * 1000, 2)
@@ -87,10 +81,6 @@ class Info(commands.Cog):
         embed.add_field(
             name="Average message latency",
             value=f"{latency}ms",
-        )
-        embed.add_field(
-            name="Average Hiyobi API server latency",
-            value=f"{hiyobi_latency}ms" if hiyobi_latency else "가져올 수 없음",
         )
         embed.add_field(
             name="Average Heliotrope server latency",
