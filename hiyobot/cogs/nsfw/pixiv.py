@@ -21,7 +21,7 @@ class Pixiv(commands.Cog):
         msg: discord.Message = await ctx.send(
             embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
         )
-        embed = await self.bot.pixiv.illust_embed(index)
+        embed = await self.bot.pixiv.illust_embed(index, ctx.channel.is_nsfw())
         await msg.edit(embed=embed)
 
     @commands.command(name="픽시브정보")
