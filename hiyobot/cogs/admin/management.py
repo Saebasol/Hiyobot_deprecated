@@ -4,10 +4,10 @@ from discord.ext.commands.context import Context
 from discord.ext.commands.core import command, is_owner
 from discord.ext.tasks import loop
 
-from Hiyobot.bot import Hiyobot
+from hiyobot.bot import Hiyobot
 
 
-class Issue(Cog):
+class Management(Cog):
     def __init__(self, bot: Hiyobot):
         self.bot = bot
         self.check_heliotrope.start()
@@ -15,13 +15,28 @@ class Issue(Cog):
     @loop(minutes=5.0)
     async def check_heliotrope(self):
         try:
-            await self.bot.rose.latency()
+            await self.bot.rose.latency()  # will changed
         except:
             self.bot.heliotrope_issue = True
         else:
             self.bot.heliotrope_issue = False
 
-    @command("현황")
+    async def bot_check(self, ctx: Context):
+        if self.bot.maintenance and not await self.bot.is_owner(ctx.author):
+            await ctx.send(
+                embed=Embed(
+                    title="봇이 점검중입니다.",
+                    description=f"사유: ``{self.bot.maintenance_message}``\n\n[공식 디코](https://discord.gg/PSshFYr)",
+                )
+            )
+            return False
+        else:
+            if self.bot.maintenance:
+                await ctx.send("경고: 유지보수 상태입니다.")
+
+        return True
+
+    @command("상태")
     @is_owner()
     async def _setting(self, ctx: Context):
         if self.bot.heliotrope_issue or self.bot.maintenance:
@@ -78,4 +93,4 @@ class Issue(Cog):
 
 
 def setup(bot: Hiyobot):
-    bot.add_cog(Issue(bot))
+    bot.add_cog(Management(bot))
