@@ -6,6 +6,7 @@ import discord
 from discord.ext.commands.bot import Bot
 
 from utils.request import Request
+from utils.mintchoco import HeliotropeResolver
 
 
 class Hiyobot(Bot):
@@ -19,8 +20,10 @@ class Hiyobot(Bot):
         self.heliotrope_issue = False
         self.maintenance = False
         self.maintenance_message = ""
+
         self.notion_secret = getenv("NOTION_SECRET")
         self.notion_database_id = getenv("NOTION_ID")
+        self.mintchoco = HeliotropeResolver(getenv("HIYOBOT"))
         self.request: Optional[Request] = None
 
 

@@ -4,17 +4,17 @@ from typing import Iterable
 
 import discord
 from discord.embeds import Embed
-from rose import Client  # type: ignore
-from rose.model import (  # type: ignore
+from mintchoco.client import API_URL, Client  # type: ignore
+from mintchoco.model import (  # type: ignore
     HeliotropeImages,
     HeliotropeInfo,
-    HeliotropeValueData,
+    Tag,
 )
 
 
-class RoseExt(Client):
+class HeliotropeResolver(Client):
     @staticmethod
-    def parse_value_url(value_url_list: Iterable[HeliotropeValueData]):
+    def parse_value_url(value_url_list: Iterable[Tag]):
         if value_url_list:
             return [
                 f"[{value_url_dict.value}](https://hitomi.la{value_url_dict.url})"
@@ -28,33 +28,32 @@ class RoseExt(Client):
         embeds = []
         num = 0
 
-        for file_info in img_list.images:
+        for file_info in img_list.files:
             num += 1
             embeds.append(
                 discord.Embed()
-                .set_image(url=file_info.url)
+                .set_image(url=file_info.image)
                 .set_footer(text=f"{num}/{total} 페이지")
             )
 
         return embeds
 
     def make_embed_with_info(self, info: HeliotropeInfo):
+        print(info)
         tags_join = (
             ", ".join(self.parse_value_url(info.tags))
             .replace("♀", "\\♀")
             .replace("♂", "\\♂")
         )
         embed = discord.Embed(
-            title=info.title.value,
+            title=info.title,
             description=f"[{info.language.value}]({info.language.url})",
-            url=info.title.url,
+            url=f"https://hitomi.la/galleries/{info.index}.html",
         )
-        embed.set_thumbnail(
-            url=f"https://doujinshiman.ga/v3/api/proxy/{info.thumbnail}"
-        )
+        embed.set_thumbnail(url=f"{API_URL}/proxy/{info.thumbnail}")
         embed.add_field(
             name="번호",
-            value=f"[{info.galleryid}](https://hitomi.la/reader/{info.galleryid}.html)",
+            value=f"[{info.index}](https://hitomi.la/reader/{info.index}.html)",
             inline=False,
         )
         embed.add_field(
@@ -81,26 +80,25 @@ class RoseExt(Client):
             value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무 길어요.",
             inline=False,
         )
+        print(embed)
         return embed
 
     async def list_embed(self, number: int):
-        lists = await self.list_(number)
-        if lists.status != 200:
+        heliotrope_lists = await self.list(number)
+
+        if heliotrope_lists.status != 200:
             return
-        return [self.make_embed_with_info(list_) for list_ in lists.list]
+
+        return [
+            self.make_embed_with_info(heliotrope_list)
+            for heliotrope_list in heliotrope_lists.list
+        ]
 
     async def info_embed(self, index: int):
         info = await self.info(index)
 
         if info.status != 200:
             return
-
-        return self.make_embed_with_info(info)
-
-    async def random_embed(self):
-        index_list = await self.index()
-
-        info = await self.info(choice(index_list))
 
         return self.make_embed_with_info(info)
 
@@ -114,8 +112,34 @@ class RoseExt(Client):
             await self.images(index), len(list(galleryinfo.files))
         )
 
+    async def search_embed(self, query: str):
+        galleryinfo = await self.search(query)
+
+        if galleryinfo.status != 200:
+            return
+
+        return [
+            self.make_embed_with_info(result)
+            for result in galleryinfo.result
+        ]
+
+    async def count_embed(self):
+        count_info = await self.count()
+
+        if count_info.status != 200:
+            return
+
+        return discord.Embed(
+            title="히요봇에서 집계된 랭킹입니다.",
+            description="\n".join(
+                [
+                    f"{index}. [{info.title}](https://hitomi.la/galleries/{info.index}.html): {info.count}회"
+                    for index, info in enumerate(count_info.list, 1)
+                ]
+            ),
+        )
+
     async def latency(self):
-        heliotrope_latency1 = time.perf_counter()
-        await self.request("GET", "/")
-        heliotrope_latency2 = time.perf_counter()
-        return heliotrope_latency2 - heliotrope_latency1
+        heliotrope_latency = time.perf_counter()
+        await self.about()
+        return heliotrope_latency - time.perf_counter()
