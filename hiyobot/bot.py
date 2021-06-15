@@ -1,6 +1,7 @@
 from glob import glob
 from os import getenv
 from typing import Optional
+from utils.pixiv import PixivResolver
 
 import discord
 from discord.ext.commands.bot import Bot
@@ -24,6 +25,7 @@ class Hiyobot(Bot):
         self.notion_secret = getenv("NOTION_SECRET")
         self.notion_database_id = getenv("NOTION_ID")
         self.mintchoco = HeliotropeResolver(getenv("HIYOBOT"))
+        self.pixiv = PixivResolver()
         self.request: Optional[Request] = None
 
 

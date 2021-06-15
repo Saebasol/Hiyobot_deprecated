@@ -1,3 +1,4 @@
+import re
 import time
 from random import choice
 from typing import Iterable
@@ -13,6 +14,19 @@ from mintchoco.model import (  # type: ignore
 
 
 class HeliotropeResolver(Client):
+    @staticmethod
+    def get_image_url(url: str):
+        url_parse_regex = re.compile(
+            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
+        )
+        parsed_url: list[str] = url_parse_regex.findall(url)[0]
+
+        prefix = parsed_url[0]
+        main_url = parsed_url[1].replace(".", "_")
+        type_ = parsed_url[2]
+        image = parsed_url[3].replace("/", "_")
+        return f"{API_URL}/api/proxy/{prefix}_{type_}{main_url}_{image}"
+
     @staticmethod
     def parse_value_url(value_url_list: Iterable[Tag]):
         if value_url_list:
@@ -39,7 +53,6 @@ class HeliotropeResolver(Client):
         return embeds
 
     def make_embed_with_info(self, info: HeliotropeInfo):
-        print(info)
         tags_join = (
             ", ".join(self.parse_value_url(info.tags))
             .replace("♀", "\\♀")
@@ -50,7 +63,7 @@ class HeliotropeResolver(Client):
             description=f"[{info.language.value}]({info.language.url})",
             url=f"https://hitomi.la/galleries/{info.index}.html",
         )
-        embed.set_thumbnail(url=f"{API_URL}/proxy/{info.thumbnail}")
+        embed.set_thumbnail(url=self.shuffle_image_url(info.thumbnail))
         embed.add_field(
             name="번호",
             value=f"[{info.index}](https://hitomi.la/reader/{info.index}.html)",
@@ -118,10 +131,7 @@ class HeliotropeResolver(Client):
         if galleryinfo.status != 200:
             return
 
-        return [
-            self.make_embed_with_info(result)
-            for result in galleryinfo.result
-        ]
+        return [self.make_embed_with_info(result) for result in galleryinfo.result]
 
     async def count_embed(self):
         count_info = await self.count()
