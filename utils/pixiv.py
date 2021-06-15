@@ -1,9 +1,8 @@
 import asyncio
-import re
 import time
 from datetime import datetime
+from utils.mintchoco import HeliotropeResolver
 
-import aiohttp
 import discord
 from bs4 import BeautifulSoup
 
@@ -50,21 +49,6 @@ class PixivRequester(Request):
             return None
         return resp.body
 
-    @staticmethod
-    def shuffle_image_url(url: str):
-        url_parse_regex = re.compile(
-            r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
-        )
-
-        parsed_url: list[str] = url_parse_regex.findall(url)[0]
-
-        prefix = parsed_url[0]
-        main_url = parsed_url[1].replace(".", "_")
-        type_ = parsed_url[2]
-        image = parsed_url[3].replace("/", "_")
-
-        return f"{prefix}_{type_}{main_url}_{image}"
-
     async def get_ranking(self, mode: str):
         return await (
             self.get(
@@ -78,7 +62,7 @@ class PixivRequester(Request):
         if not resp:
             return "https://cdn.discordapp.com/attachments/848196621194756126/848196685389365268/unnamed_1.png"
         illust_url = resp["body"][0]["urls"]["original"]
-        return f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+        return HeliotropeResolver.get_image_url(illust_url)
 
     async def get_info(self, index: int):
         resp = await self.get(f"/ajax/illust/{index}")
@@ -142,9 +126,7 @@ class PixivResolver(PixivRequester):
             title = info.title
         embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_author(name=title, url=f"https://www.pixiv.net/artworks/{info.id}")
-        embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(info.url)}"
-        )
+        embed.set_image(url=HeliotropeResolver.get_image_url(info.url))
         embed.set_footer(text=f"Illust by {info.username}")
         return embed
 
