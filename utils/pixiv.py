@@ -50,7 +50,7 @@ class PixivRequester(Request):
             return None
         if include_body:
             return resp.body["body"]
-        return resp
+        return resp.body
 
     @staticmethod
     def shuffle_image_url(url: str):
