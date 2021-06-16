@@ -39,7 +39,9 @@ class Heliotrope(commands.Cog):
 
     @commands.command("검색")
     async def _search(self, ctx: commands.Context, *, query: str):
-        """ """
+        """
+        검색을 요청합니다.
+        """
         print(query)
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
         if embeds := await self.bot.mintchoco.search_embed(query):
@@ -77,6 +79,19 @@ class Heliotrope(commands.Cog):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
         if embed := await self.bot.mintchoco.viewer_embed(index):
             await pagenator(self.bot, ctx, msg, embed)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+
+    @commands.command("랭킹")
+    @commands.is_nsfw()
+    async def _ranking(self, ctx: commands.Context):
+        """
+        랭킹을 가져옵니다.
+        """
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
+
+        if embed := await self.bot.mintchoco.count_embed():
+            return await msg.edit(embed=embed)
 
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
