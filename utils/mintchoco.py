@@ -5,8 +5,9 @@ from typing import Iterable
 
 import discord
 from discord.embeds import Embed
-from mintchoco.client import API_URL, Client  # type: ignore
-from mintchoco.model import (  # type: ignore
+from mintchoco.client import API_URL, Client
+from mintchoco.model import (
+    HeliotropeCount,
     HeliotropeImages,
     HeliotropeInfo,
     Tag,
@@ -63,7 +64,7 @@ class HeliotropeResolver(Client):
             description=f"[{info.language.value}]({info.language.url})",
             url=f"https://hitomi.la/galleries/{info.index}.html",
         )
-        embed.set_thumbnail(url=self.shuffle_image_url(info.thumbnail))
+        embed.set_thumbnail(url=self.get_image_url(info.thumbnail))
         embed.add_field(
             name="번호",
             value=f"[{info.index}](https://hitomi.la/reader/{info.index}.html)",
@@ -93,7 +94,6 @@ class HeliotropeResolver(Client):
             value=tags_join if len(tags_join) <= 1024 else "표시하기에는 너무 길어요.",
             inline=False,
         )
-        print(embed)
         return embed
 
     async def list_embed(self, number: int):
@@ -135,6 +135,8 @@ class HeliotropeResolver(Client):
 
     async def count_embed(self):
         count_info = await self.count()
+
+        assert isinstance(count_info, HeliotropeCount)
 
         if count_info.status != 200:
             return
