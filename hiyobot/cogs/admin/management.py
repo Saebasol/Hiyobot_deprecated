@@ -1,3 +1,4 @@
+import hiyobot
 from discord.embeds import Embed
 from discord.ext.commands.cog import Cog
 from discord.ext.commands.context import Context
@@ -10,18 +11,13 @@ from hiyobot.bot import Hiyobot
 class Management(Cog):
     def __init__(self, bot: Hiyobot):
         self.bot = bot
-        self.check_heliotrope.start()
-
-    @loop(minutes=5.0)
-    async def check_heliotrope(self):
-        try:
-            await self.bot.rose.latency()  # will changed
-        except:
-            self.bot.heliotrope_issue = True
-        else:
-            self.bot.heliotrope_issue = False
 
     async def bot_check(self, ctx: Context):
+        # Temp
+        await ctx.send(
+            f"현재 봇의 릴리즈채널은 {hiyobot.version_info.releaselevel} 입니다.\n매우 불안정 하오니 버그 발생시 ``&문의``명령어를 통해 문의해주세요",
+            delete_after=10,
+        )
         if self.bot.maintenance and not await self.bot.is_owner(ctx.author):
             await ctx.send(
                 embed=Embed(
