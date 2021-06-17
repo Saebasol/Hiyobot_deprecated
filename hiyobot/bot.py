@@ -5,6 +5,8 @@ from typing import Optional
 import discord
 from discord.ext.commands.bot import Bot
 
+from utils.mintchoco import HeliotropeResolver
+from utils.pixiv import PixivResolver
 from utils.request import Request
 
 
@@ -19,8 +21,11 @@ class Hiyobot(Bot):
         self.heliotrope_issue = False
         self.maintenance = False
         self.maintenance_message = ""
+
         self.notion_secret = getenv("NOTION_SECRET")
         self.notion_database_id = getenv("NOTION_ID")
+        self.mintchoco = HeliotropeResolver(getenv("HIYOBOT"))
+        self.pixiv = PixivResolver()
         self.request: Optional[Request] = None
 
 

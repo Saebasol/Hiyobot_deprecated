@@ -30,29 +30,24 @@ class Heliotrope(commands.Cog):
 
         사용 예시 : ``&번호 1496588``
         """
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
-        )
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
 
-        embed = await self.bot.rose.info_embed(index)
-        if embed:
+        if embed := await self.bot.mintchoco.info_embed(index):
             return await msg.edit(embed=embed)
 
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
-    @commands.command(name="랜덤")
-    @commands.is_nsfw()
-    async def _random(self, ctx: commands.Context):
+    @commands.command("검색")
+    async def _search(self, ctx: commands.Context, *, query: str):
         """
-        랜덤으로 작품 정보 하나를 가져옵니다.
+        검색을 요청합니다.
+        """
+        print(query)
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
+        if embeds := await self.bot.mintchoco.search_embed(query):
+            return await pagenator(self.bot, ctx, msg, embeds)
 
-        사용 예시 : ``&랜덤``
-        """
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
-        )
-        embed = await self.bot.rose.random_embed()
-        await msg.edit(embed=embed)
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command(name="리스트")
     @commands.is_nsfw()
@@ -64,12 +59,9 @@ class Heliotrope(commands.Cog):
 
         사용 예시 : ``&리스트`` 또는 ``&리스트 2``
         """
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요")
-        )
-        embed = await self.bot.rose.list_embed(num)
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요"))
 
-        if embed:
+        if embed := await self.bot.mintchoco.list_embed(num):
             return await pagenator(self.bot, ctx, msg, embed)
 
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
@@ -84,12 +76,22 @@ class Heliotrope(commands.Cog):
 
         사용법: ``&뷰어 1496588``
         """
-        msg: discord.Message = await ctx.send(
-            embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요.")
-        )
-        embed = await self.bot.rose.viewer_embed(index)
-        if embed:
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
+        if embed := await self.bot.mintchoco.viewer_embed(index):
             await pagenator(self.bot, ctx, msg, embed)
+
+        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+
+    @commands.command("랭킹")
+    @commands.is_nsfw()
+    async def _ranking(self, ctx: commands.Context):
+        """
+        랭킹을 가져옵니다.
+        """
+        msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
+
+        if embed := await self.bot.mintchoco.count_embed():
+            return await msg.edit(embed=embed)
 
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
