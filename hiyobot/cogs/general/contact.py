@@ -19,7 +19,10 @@ class Contact(Cog):
         msg = await ctx.send(
             embed=Embed(
                 title="문의하실 형식을 선택해주세요",
-                description="🐛 는 버그를 의미합니다.\n🚀는 건의 및 기능 요청을 의미합니다.\n❎는 취소입니다.\n작성도중 취소 하실려면 '취소' 또는 'cancel'이라 작성하시면 취소됩니다.",
+                description="🐛 는 버그를 의미합니다.\n🚀는 건의 및 기능 요청을 의미합니다.\n❎는 취소입니다.\n"
+                "작성 도중 취소 하실려면 '취소' 또는 'cancel'이라 작성하시면 취소됩니다.\n"
+                "본인이 깃허브 계정이 있으시다면 [해당 레포](https://github.com/Saebasol/Hiyobot)에서 이슈를 직접 작성하실수있습니다."
+                "\n\n[공식 디스코드](https://discord.gg/PSshFYr)",
             )
         )
         await msg.add_reaction("🐛")
@@ -46,6 +49,11 @@ class Contact(Cog):
 
     @command("문의")
     async def _contact(self, ctx: Context):
+        """
+        개발자에게 직접 문의할수있습니다.
+
+        사용 예시 ``&문의``
+        """
         notion = Notion(self.bot.notion_database_id)
         steps: list[Any] = [notion.set_title]
 
@@ -117,7 +125,7 @@ class Contact(Cog):
             await msg.edit(
                 embed=Embed(
                     title="정상적으로 요청되었어요",
-                    description=f"[이곳에서 확인하실수있어요.](https://www.notion.so/{self.bot.notion_database_id}/{page_id})",
+                    description=f"[이곳에서 확인하실수있어요.](https://www.notion.so/{self.bot.notion_database_id}/{page_id})\n\n[공식 디스코드](https://discord.gg/PSshFYr)",
                 )
             )
         else:
