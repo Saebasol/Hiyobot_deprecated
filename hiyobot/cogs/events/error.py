@@ -31,6 +31,12 @@ class Error(commands.Cog):
                 "명령어 사용법이 잘못되었습니다. 지정한 값이 잘못되었습니다. `&도움말` 명령어를 통해 정확한 사용법을 보실 수 있습니다.",
                 delete_after=5,
             )
+        else:
+            await ctx.send(
+                "알수없는 오류가 발생했습니다. 자동으로 개발자에게 오류로그를 전송합니다.\n``&문의``를 이용해 버그신고를 해주시면 더 빠른 도움이됩니다.",
+                delete_after=10,
+            )
+            raise error
 
 
 def setup(bot: Hiyobot):

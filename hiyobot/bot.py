@@ -3,8 +3,10 @@ from os import getenv
 from typing import Optional
 
 import discord
+import sentry_sdk
 from discord.ext.commands.bot import Bot
 
+import hiyobot
 from utils.mintchoco import HeliotropeResolver
 from utils.pixiv import PixivResolver
 from utils.request import Request
@@ -27,6 +29,9 @@ class Hiyobot(Bot):
         self.mintchoco = HeliotropeResolver(getenv("HIYOBOT"))
         self.pixiv = PixivResolver()
         self.request: Optional[Request] = None
+
+    async def on_error(self, event_method, *args, **kwargs):
+        raise
 
 
 def load_cogs(bot: Hiyobot):
@@ -54,6 +59,7 @@ def load_cogs(bot: Hiyobot):
 
 def run(token: str):
     intents = discord.Intents.default()
-    bot = Hiyobot(command_prefix="설마프리픽스겹치겠냐", intents=intents)
+    bot = Hiyobot(command_prefix="&", intents=intents)
     load_cogs(bot)
+    sentry_sdk.init(getenv("SENTRY_DSN"), release=hiyobot.__version__)
     bot.run(token)
