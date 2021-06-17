@@ -29,31 +29,14 @@ class Info(commands.Cog):
         await ctx.trigger_typing()
         latency = round((time.perf_counter() - message_latency) * 1000, 2)
 
-        heliotrope_latency = self.bot.rose.latency()
-        pixiv_latency = self.bot.pixiv.latency()
-
-        await asyncio.wait([hiyobi_latency, heliotrope_latency, pixiv_latency])
-
-        try:
-            heliotrope_latency = round(heliotrope_latency * 1000, 2)
-        except ContentTypeError:
-            heliotrope_latency = None
-
-        try:
-            pixiv_latency = round(pixiv_latency * 1000, 2)
-        except ContentTypeError:
-            pixiv_latency = None
-
         embed = discord.Embed(
-            title=f"Info\nCommand prefix: `&`\nHiyobot: `{hiyobot.__version__}`",
+            title=f"Info\nCommand prefix: `{self.bot.command_prefix}`\nHiyobot: `{hiyobot.__version__}`\nRelease Channel: `{hiyobot.version_info.releaselevel}`",
             description=f"Python `{sys.version}` on `{sys.platform}`".replace("\n", ""),
-            url="https://saebasol.statuspage.io/",
         )
         embed.add_field(
             name="discord.py version", value=f"{discord.__version__}", inline=False
         )
         with self.proc.oneshot():
-
             mem = self.proc.memory_full_info()
             name = self.proc.name()
             pid = self.proc.pid
@@ -81,14 +64,6 @@ class Info(commands.Cog):
         embed.add_field(
             name="Average message latency",
             value=f"{latency}ms",
-        )
-        embed.add_field(
-            name="Average Heliotrope server latency",
-            value=f"{heliotrope_latency}ms" if heliotrope_latency else "가져올 수 없음",
-        )
-        embed.add_field(
-            name="Average Pixiv API server latency",
-            value=f"{pixiv_latency}ms" if pixiv_latency else "가져올 수 없음",
         )
         await ctx.send(embed=embed)
 
