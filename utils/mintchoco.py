@@ -116,6 +116,7 @@ class HeliotropeResolver(Client):
         if galleryinfo.status != 200:
             return
 
+        await self.post_count(index)
         return self.make_viewer_embed(
             await self.images(index), len(list(galleryinfo.files))
         )
@@ -129,7 +130,7 @@ class HeliotropeResolver(Client):
         return [self.make_embed_with_info(result) for result in galleryinfo.result]
 
     async def count_embed(self):
-        count_info = await self.count()
+        count_info = await self.get_count()
 
         assert isinstance(count_info, HeliotropeCount)
 
