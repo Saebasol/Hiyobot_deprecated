@@ -44,10 +44,12 @@ class PixivIllustModel:
 
 
 class PixivRequester(Request):
-    async def get(self, endpoint, **kwargs):
+    async def get(self, endpoint, include_body=False, **kwargs):
         resp = await super().get("https://www.pixiv.net" + endpoint, "json", **kwargs)
         if resp.status != 200:
             return None
+        if include_body:
+            return resp.body["body"]
         return resp.body
 
     @staticmethod
@@ -74,17 +76,16 @@ class PixivRequester(Request):
         )
 
     async def get_original_url(self, index: int):
-        resp = await self.get(f"/ajax/illust/{index}/pages")
+        resp = await self.get(f"/ajax/illust/{index}/pages", True)
         if not resp:
             return "https://cdn.discordapp.com/attachments/848196621194756126/848196685389365268/unnamed_1.png"
-        illust_url = resp["body"][0]["urls"]["original"]
+        illust_url = resp[0]["urls"]["original"]
         return f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
 
     async def get_info(self, index: int):
-        resp = await self.get(f"/ajax/illust/{index}")
+        resp = await self.get(f"/ajax/illust/{index}", True)
         if not resp:
             return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
-        resp = resp["body"]
         return PixivInfoModel(
             resp["bookmarkCount"],
             resp["illustComment"],
@@ -97,10 +98,9 @@ class PixivRequester(Request):
         )
 
     async def get_illust(self, index: int):
-        resp = await self.get(f"/ajax/illust/{index}")
+        resp = await self.get(f"/ajax/illust/{index}", True)
         if not resp:
             return discord.Embed(title="해당 작품은 삭제되었거나 존재하지 않는 작품 ID입니다.")
-        resp = resp["body"]
         return PixivIllustModel(
             resp["id"],
             resp["title"],

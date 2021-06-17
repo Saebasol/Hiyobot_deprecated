@@ -11,9 +11,6 @@ class Response:
 
 
 class Request:
-    def __init__(self) -> None:
-        self.session: Optional[ClientSession] = None
-
     async def request(
         self,
         method: Literal["GET", "POST"],
@@ -21,11 +18,11 @@ class Request:
         return_method: Literal["json", "text", "read"],
         **kwargs: Any
     ):
-        if not self.session:
-            self.session = ClientSession()
-
-        response = await self.session.request(method, url, **kwargs)
-        return Response(response.status, await getattr(response, return_method)())
+        async with ClientSession() as client_session:
+            async with client_session.request(method, url, **kwargs) as response:
+                return Response(
+                    response.status, await getattr(response, return_method)()
+                )
 
     async def get(
         self, url: str, return_method: Literal["json", "text", "read"], **kwargs: Any
