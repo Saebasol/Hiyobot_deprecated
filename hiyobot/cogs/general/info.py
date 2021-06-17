@@ -1,4 +1,4 @@
-import os
+import asyncio
 import sys
 import time
 from json.decoder import JSONDecodeError
@@ -29,18 +29,18 @@ class Info(commands.Cog):
         await ctx.trigger_typing()
         latency = round((time.perf_counter() - message_latency) * 1000, 2)
 
-        try:
-            hiyobi_latency = round(await self.bot.hiyobi.latency() * 1000, 2)
-        except JSONDecodeError:
-            hiyobi_latency = None
+        heliotrope_latency = self.bot.rose.latency()
+        pixiv_latency = self.bot.pixiv.latency()
+
+        await asyncio.wait([hiyobi_latency, heliotrope_latency, pixiv_latency])
 
         try:
-            heliotrope_latency = round(await self.bot.rose.latency() * 1000, 2)
+            heliotrope_latency = round(heliotrope_latency * 1000, 2)
         except ContentTypeError:
             heliotrope_latency = None
 
         try:
-            pixiv_latency = round(await self.bot.pixiv.latency() * 1000, 2)
+            pixiv_latency = round(pixiv_latency * 1000, 2)
         except ContentTypeError:
             pixiv_latency = None
 
@@ -83,16 +83,12 @@ class Info(commands.Cog):
             value=f"{latency}ms",
         )
         embed.add_field(
-            name="Average Hiyobi API server latency",
-            value=f"{hiyobi_latency if hiyobi_latency else '가져올 수 없음'}ms",
-        )
-        embed.add_field(
             name="Average Heliotrope server latency",
-            value=f"{heliotrope_latency if heliotrope_latency else '가져올 수 없음'}ms",
+            value=f"{heliotrope_latency}ms" if heliotrope_latency else "가져올 수 없음",
         )
         embed.add_field(
             name="Average Pixiv API server latency",
-            value=f"{pixiv_latency if pixiv_latency else '가져올 수 없음'}ms",
+            value=f"{pixiv_latency}ms" if pixiv_latency else "가져올 수 없음",
         )
         await ctx.send(embed=embed)
 
