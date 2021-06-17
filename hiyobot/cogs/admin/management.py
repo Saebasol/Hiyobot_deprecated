@@ -1,10 +1,10 @@
-import hiyobot
 from discord.embeds import Embed
 from discord.ext.commands.cog import Cog
 from discord.ext.commands.context import Context
 from discord.ext.commands.core import command, is_owner
 from discord.ext.tasks import loop
 
+import hiyobot
 from hiyobot.bot import Hiyobot
 
 

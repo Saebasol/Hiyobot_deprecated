@@ -1,14 +1,15 @@
 from glob import glob
 from os import getenv
 from typing import Optional
-import hiyobot
+
 import discord
+import sentry_sdk
 from discord.ext.commands.bot import Bot
 
+import hiyobot
 from utils.mintchoco import HeliotropeResolver
 from utils.pixiv import PixivResolver
 from utils.request import Request
-import sentry_sdk
 
 
 class Hiyobot(Bot):
