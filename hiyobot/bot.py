@@ -1,13 +1,13 @@
 from glob import glob
 from os import getenv
 from typing import Optional
-from utils.pixiv import PixivResolver
 
 import discord
 from discord.ext.commands.bot import Bot
 
-from utils.request import Request
 from utils.mintchoco import HeliotropeResolver
+from utils.pixiv import PixivResolver
+from utils.request import Request
 
 
 class Hiyobot(Bot):

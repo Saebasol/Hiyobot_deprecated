@@ -6,12 +6,7 @@ from typing import Iterable
 import discord
 from discord.embeds import Embed
 from mintchoco.client import API_URL, Client
-from mintchoco.model import (
-    HeliotropeCount,
-    HeliotropeImages,
-    HeliotropeInfo,
-    Tag,
-)
+from mintchoco.model import HeliotropeCount, HeliotropeImages, HeliotropeInfo, Tag
 
 
 class HeliotropeResolver(Client):
