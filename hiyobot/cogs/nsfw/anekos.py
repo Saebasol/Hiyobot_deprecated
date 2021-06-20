@@ -50,7 +50,7 @@ class Nekos(Cog):
         else:
             tag = random.choice(sfw_tags if not ctx.channel.is_nsfw() else nsfw_tags)  # type: ignore
 
-        img_url = (await self.bot.request.get(URL + tag, "json")).body["url"]
+        img_url = (await self.bot.request.get(URL + f"/{tag}", "json")).body["url"]
         await ctx.send(embed=embed.set_image(url=img_url))
 
 
