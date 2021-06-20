@@ -33,8 +33,7 @@ class HeliotropeResolver(Client):
 
         return ["없음"]
 
-    @staticmethod
-    def make_viewer_embed(img_list: HeliotropeImages, total: int) -> list[Embed]:
+    def make_viewer_embed(self, img_list: HeliotropeImages, total: int) -> list[Embed]:
         embeds = []
         num = 0
 
@@ -42,7 +41,7 @@ class HeliotropeResolver(Client):
             num += 1
             embeds.append(
                 discord.Embed()
-                .set_image(url=file_info.image)
+                .set_image(url=self.get_image_url(file_info.image))
                 .set_footer(text=f"{num}/{total} 페이지")
             )
 
