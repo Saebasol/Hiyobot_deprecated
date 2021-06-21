@@ -105,7 +105,8 @@ class Contact(Cog):
                 return await msg.edit(embed=Embed(title="시간이 초과되었어요."))
             else:
                 if message.content in ["취소", "cancel"]:
-                    await message.delete()
+                    with suppress(Exception):
+                        await message.delete()
                     return await msg.edit(embed=Embed(title="취소 되었어요."))
 
                 step(message.content)
