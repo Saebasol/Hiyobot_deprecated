@@ -38,6 +38,7 @@ class Heliotrope(commands.Cog):
         await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command("검색")
+    @commands.is_nsfw()
     async def _search(self, ctx: commands.Context, *, query: str):
         """
         검색을 요청합니다.
