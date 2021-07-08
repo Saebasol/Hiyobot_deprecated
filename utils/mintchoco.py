@@ -141,7 +141,7 @@ class HeliotropeResolver(Client):
             description="\n".join(
                 [
                     f"{index}. [{info.title}](https://hitomi.la/galleries/{info.index}.html): {info.count}회"
-                    for index, info in enumerate(count_info.list, 1)
+                    for index, info in enumerate(count_info.list[:10], 1)
                 ]
             ),
         )
