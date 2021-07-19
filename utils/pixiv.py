@@ -80,7 +80,9 @@ class PixivRequester(Request):
         if not resp:
             return "https://cdn.discordapp.com/attachments/848196621194756126/848196685389365268/unnamed_1.png"
         illust_url = resp[0]["urls"]["original"]
-        return f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+        return (
+            f"https://doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+        )
 
     async def get_info(self, index: int):
         resp = await self.get(f"/ajax/illust/{index}", True)
@@ -140,12 +142,9 @@ class PixivResolver(PixivRequester):
             title = f"#{info.rank} | {info.title}"
         else:
             title = info.title
-        url = await self.get_original_url(info.id)
         embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_author(name=title, url=f"https://www.pixiv.net/artworks/{info.id}")
-        embed.set_image(
-            url=f"https://doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(url)}"
-        )
+        embed.set_image(url=(await self.get_original_url(info.id)))
         embed.set_footer(text=f"Illust by {info.username}")
         return embed
 
