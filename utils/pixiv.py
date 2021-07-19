@@ -140,10 +140,11 @@ class PixivResolver(PixivRequester):
             title = f"#{info.rank} | {info.title}"
         else:
             title = info.title
+        url = await self.get_original_url(info.id)
         embed = discord.Embed(description=info.id, color=0x008AE6)
         embed.set_author(name=title, url=f"https://www.pixiv.net/artworks/{info.id}")
         embed.set_image(
-            url=f"https://beta.doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(info.url)}"
+            url=f"https://doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(url)}"
         )
         embed.set_footer(text=f"Illust by {info.username}")
         return embed
