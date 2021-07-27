@@ -34,8 +34,8 @@ class Heliotrope(commands.Cog):
 
         if embed := await self.bot.mintchoco.info_embed(index):
             return await msg.edit(embed=embed)
-
-        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+        else:
+            await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command("검색")
     @commands.is_nsfw()
@@ -47,8 +47,8 @@ class Heliotrope(commands.Cog):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
         if embeds := await self.bot.mintchoco.search_embed(query):
             return await pagenator(self.bot, ctx, msg, embeds)
-
-        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+        else:
+            await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command(name="리스트")
     @commands.is_nsfw()
@@ -64,8 +64,8 @@ class Heliotrope(commands.Cog):
 
         if embed := await self.bot.mintchoco.list_embed(num):
             return await pagenator(self.bot, ctx, msg, embed)
-
-        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+        else:
+            await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command(name="뷰어")
     @commands.is_nsfw()
@@ -80,8 +80,8 @@ class Heliotrope(commands.Cog):
         msg = await ctx.send(embed=discord.Embed(title="정보를 요청합니다. 잠시만 기다려주세요."))
         if embed := await self.bot.mintchoco.viewer_embed(index):
             await pagenator(self.bot, ctx, msg, embed)
-
-        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+        else:
+            await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
     @commands.command("랭킹")
     @commands.is_nsfw()
@@ -93,8 +93,8 @@ class Heliotrope(commands.Cog):
 
         if embed := await self.bot.mintchoco.count_embed():
             return await msg.edit(embed=embed)
-
-        await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
+        else:
+            await msg.edit(embed=discord.Embed(title="정보를 찾지 못했습니다."))
 
 
 def setup(bot: Hiyobot):
