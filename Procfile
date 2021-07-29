@@ -1,1 +1,1 @@
-python -m hiyobot
+worker: python -m hiyobot
