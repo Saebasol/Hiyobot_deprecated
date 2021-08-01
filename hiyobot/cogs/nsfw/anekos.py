@@ -45,7 +45,7 @@ class Nekos(Cog):
                     return await ctx.send(
                         "해당 태그는 성인 태그인 것 같습니다. 연령 제한이 설정된 채널에서 사용해주세요."
                     )
-            if tag not in sfw_tags or tag not in nsfw_tags:
+            if tag not in sfw_tags and tag not in nsfw_tags:
                 return await ctx.send("해당 태그는 없어요! 태그는 ``&네코 도움말``을 통해 확인하실 수 있어요.")
         else:
             tag = random.choice(sfw_tags if not ctx.channel.is_nsfw() else nsfw_tags)  # type: ignore
