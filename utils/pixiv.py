@@ -81,7 +81,7 @@ class PixivRequester(Request):
             return "https://cdn.discordapp.com/attachments/848196621194756126/848196685389365268/unnamed_1.png"
         illust_url = resp[0]["urls"]["original"]
         return (
-            f"https://doujinshiman.ga/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
+            f"https://heliotrope.me/v4/api/proxy/{self.shuffle_image_url(illust_url)}"
         )
 
     async def get_info(self, index: int):
