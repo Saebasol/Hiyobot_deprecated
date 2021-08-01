@@ -18,7 +18,7 @@ class Nekos(Cog):
     async def _neko(
         self,
         ctx: Context,
-        tag: Any = None,
+        tag: str = None,
     ):
         """
         귀여운 네코미미를 보여줍니다. 태그를 사용해서 검색도 가능합니다.
