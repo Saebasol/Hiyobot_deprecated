@@ -1,5 +1,7 @@
 # Hiyobot
 
+**Warning** Deprecated in V5
+
 > Manga and doujinshi are shown at Discord
 
 | Project name                                         | Badge                                                                                                                                                                                                                                                                                                                                                                                                                   |
