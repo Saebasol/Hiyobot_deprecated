@@ -114,8 +114,6 @@ class HeliotropeResolver(Client):
 
         if galleryinfo.status != 200:
             return
-
-        await self.post_count(index)
         return self.make_viewer_embed(
             await self.images(index), len(list(galleryinfo.files))
         )
