@@ -6,7 +6,7 @@ from typing import Iterable
 import discord
 from discord.embeds import Embed
 from mintchoco.client import Client
-from mintchoco.model import HeliotropeCount, HeliotropeImages, HeliotropeInfo, Tag
+from mintchoco.model import HeliotropeImages, HeliotropeInfo, Tag
 
 
 class HeliotropeResolver(Client):
@@ -129,22 +129,7 @@ class HeliotropeResolver(Client):
         return [self.make_embed_with_info(result) for result in galleryinfo.result]
 
     async def count_embed(self):
-        count_info = await self.get_count()
-
-        assert isinstance(count_info, HeliotropeCount)
-
-        if count_info.status != 200:
-            return
-
-        return discord.Embed(
-            title="히요봇에서 집계된 랭킹입니다.",
-            description="\n".join(
-                [
-                    f"{index}. [{info.title}](https://hitomi.la/galleries/{info.index}.html): {info.count}회"
-                    for index, info in enumerate(count_info.list[:10], 1)
-                ]
-            ),
-        )
+        return
 
     async def latency(self):
         heliotrope_latency = time.perf_counter()
