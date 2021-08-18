@@ -5,13 +5,13 @@ from typing import Iterable
 
 import discord
 from discord.embeds import Embed
-from mintchoco.client import API_URL, Client
+from mintchoco.client import Client
 from mintchoco.model import HeliotropeCount, HeliotropeImages, HeliotropeInfo, Tag
 
 
 class HeliotropeResolver(Client):
-    @staticmethod
-    def get_image_url(url: str):
+
+    def get_image_url(self, url: str):
         url_parse_regex = re.compile(
             r"\/\/(..?)(\.hitomi\.la|\.pximg\.net)\/(.+?)\/(.+)"
         )
@@ -21,7 +21,7 @@ class HeliotropeResolver(Client):
         main_url = parsed_url[1].replace(".", "_")
         type_ = parsed_url[2]
         image = parsed_url[3].replace("/", "_")
-        return f"{API_URL}/api/proxy/{prefix}_{type_}{main_url}_{image}"
+        return f"{self.API_URL}/api/proxy/{prefix}_{type_}{main_url}_{image}"
 
     @staticmethod
     def parse_value_url(value_url_list: Iterable[Tag]):
@@ -41,7 +41,7 @@ class HeliotropeResolver(Client):
             num += 1
             embeds.append(
                 discord.Embed()
-                .set_image(url=f"{API_URL}/api/proxy/{file_info.image}")
+                .set_image(url=f"{self.API_URL}/api/proxy/{file_info.image}")
                 .set_footer(text=f"{num}/{total} 페이지")
             )
 
