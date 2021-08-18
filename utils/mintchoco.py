@@ -41,7 +41,7 @@ class HeliotropeResolver(Client):
             num += 1
             embeds.append(
                 discord.Embed()
-                .set_image(url=f"{self.API_URL}/api/proxy/{file_info.image}")
+                .set_image(url=f"{self.API_URL}/api/proxy/{file_info.url}")
                 .set_footer(text=f"{num}/{total} 페이지")
             )
 
