@@ -15,8 +15,7 @@ class Management(Cog):
     async def bot_check(self, ctx: Context):
         # Temp
         await ctx.send(
-            f"현재 봇의 릴리즈채널은 {hiyobot.version_info.releaselevel} 입니다.\n매우 불안정 하오니 버그 발생시 ``&문의``명령어를 통해 문의해주세요",
-            delete_after=10,
+            f"2월 20일부터 기존에 사용하던 명령어는 사용이 불가능하고, 슬래시 커맨드로 변경됩니다.\n자세한 정보는 https://discord.gg/8B2uzKTME5를 참고해주세요.",
         )
         if self.bot.maintenance and not await self.bot.is_owner(ctx.author):
             await ctx.send(
